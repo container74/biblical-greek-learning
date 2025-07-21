@@ -1,0 +1,154 @@
+/* css/sidebar.css */
+
+/* 侧边栏整体样式 */
+.sidebar {
+    width: 250px; /* 固定宽度 */
+    background-color: #2c3e50; /* 深蓝色背景，接近图片中的颜色 */
+    color: #ecf0f1; /* 白色文字 */
+    padding: 1.5rem 1rem; /* 上下左右内边距 */
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3); /* 更明显的右侧阴影 */
+    display: flex;
+    flex-direction: column;
+    position: fixed; /* 固定定位 */
+    height: 100vh; /* 占满整个视口高度 */
+    overflow-y: auto; /* 如果内容过多，允许滚动 */
+    z-index: 1000; /* 确保侧边栏在最上层 */
+    border-right: 1px solid rgba(255, 255, 255, 0.05); /* 增加一个细微的右边框 */
+}
+
+/* 侧边栏标题 */
+.sidebar h2 {
+    color: #f39c12; /* 橙色标题，与主体颜色搭配 */
+    margin-bottom: 1.5rem; /* 底部间距 */
+    font-weight: 700; /* 加粗 */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 标题文字阴影 */
+}
+
+/* 导航链接和摘要的通用样式 */
+.sidebar-link,
+.sidebar-summary {
+    display: block; /* 块级显示 */
+    padding: 0.75rem 1rem; /* 内边距 */
+    margin-bottom: 0.4rem; /* 稍微减小底部间距 */
+    border-radius: 0.6rem; /* 稍微增大圆角 */
+    text-decoration: none; /* 移除下划线 */
+    color: #c0c7d1; /* 默认文字颜色，稍微暗一点，增加对比 */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* 平滑过渡效果，增加transform */
+    font-size: 1.05rem; /* 字体大小微调 */
+    font-weight: 500; /* 字体粗细 */
+    cursor: pointer; /* 鼠标悬停时显示手型 */
+}
+
+/* 导航链接和摘要的悬停效果 */
+.sidebar-link:hover,
+.sidebar-summary:hover {
+    background-color: #3a506b; /* 悬停时深一点的背景色，更接近主题色 */
+    color: #ffffff; /* 悬停时文字颜色更亮 */
+    transform: translateX(5px); /* 悬停时轻微右移 */
+}
+
+/* 激活状态的链接 */
+.sidebar-link.active {
+    background-color: #1a73e8; /* Google Blue 500，更现代的蓝色 */
+    background-image: linear-gradient(to right, #1a73e8, #2a84ea); /* 添加微妙的渐变 */
+    color: #ffffff; /* 白色文字 */
+    font-weight: 700; /* 加粗 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* 外部阴影，增加浮动感 */
+    transform: translateX(0); /* 激活时不移动 */
+    border: 1px solid #1a73e8; /* 边框与背景色一致 */
+}
+
+/* details 元素的样式 */
+.sidebar-details {
+    margin-bottom: 0.4rem; /* 底部间距 */
+}
+
+/* summary 元素的特殊处理，使其看起来像链接 */
+.sidebar-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none; /* 禁止文本选择 */
+}
+
+/* summary 展开/收起箭头 */
+.sidebar-summary .arrow {
+    display: inline-block;
+    width: 0.5rem; /* 箭头大小 */
+    height: 0.5rem; /* 箭头大小 */
+    border-left: 2px solid #c0c7d1; /* 箭头颜色与链接文字一致 */
+    border-bottom: 2px solid #c0c7d1; /* 箭头颜色与链接文字一致 */
+    transform: rotate(-45deg); /* 向右箭头 */
+    transition: transform 0.2s ease;
+    margin-left: 0.5rem; /* 箭头与文字的间距 */
+    flex-shrink: 0; /* 防止箭头被压缩 */
+}
+
+/* details 展开时，箭头向下 */
+.sidebar-details[open] > .sidebar-summary .arrow {
+    transform: rotate(45deg); /* 旋转90度，箭头向下 */
+    border-color: #ffffff; /* 展开时箭头颜色更亮 */
+}
+
+/* 子菜单样式 */
+.sidebar-submenu {
+    padding-left: 1.8rem; /* 子菜单缩进更多 */
+    border-left: 2px solid rgba(255, 255, 255, 0.15); /* 左侧细边框，更明显一点 */
+    margin-top: 0.3rem; /* 上部间距微调 */
+    padding-top: 0.2rem; /* 顶部内边距 */
+    padding-bottom: 0.2rem; /* 底部内边距 */
+}
+
+.sidebar-submenu ul {
+    list-style: none; /* 移除列表点 */
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-submenu li {
+    margin-bottom: 0.2rem; /* 子菜单项底部间距微调 */
+}
+
+.sidebar-submenu .sidebar-link {
+    font-size: 0.95rem; /* 子菜单链接字体小一点 */
+    padding: 0.6rem 0.8rem; /* 子菜单链接内边距 */
+    background-color: transparent; /* 默认透明背景 */
+    border-radius: 0.5rem; /* 子链接圆角 */
+}
+
+.sidebar-submenu .sidebar-link:hover {
+    background-color: #4a627a; /* 子菜单链接悬停背景色 */
+    transform: translateX(3px); /* 子链接悬停时轻微右移 */
+}
+
+.sidebar-submenu .sidebar-link.active {
+    background-color: #1a73e8; /* 子菜单激活背景色与主链接一致 */
+    background-image: linear-gradient(to right, #1a73e8, #2a84ea); /* 渐变 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 内部阴影 */
+    transform: translateX(0); /* 激活时不移动 */
+}
+
+/* 底部版权信息 */
+.sidebar .mt-auto {
+    margin-top: auto; /* 将版权信息推到底部 */
+    padding-top: 1rem; /* 顶部内边距 */
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* 顶部细线，更明显一点 */
+    text-align: center;
+    font-size: 0.85rem;
+    color: #94a3b8; /* 浅灰色文字 */
+}
+
+/* 确保主内容区域为侧边栏留出空间 */
+/* 这个样式通常在您的 HTML 文件的 <style> 标签中 */
+/* 例如：
+.main-content-wrapper {
+    margin-left: 250px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    overflow-y: auto;
+    min-height: 100vh;
+}
+*/

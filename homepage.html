@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圣经希腊语学习平台</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 (主要用于UI文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入 Google Noto Serif 字体 (主要用于希腊语文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="./css/homepage.css">
+    <link rel="stylesheet" href="./css/sidebar.css"> <!-- 引入侧边栏样式 -->
+    <style>
+        /* 确保 body 采用 flex 布局，以便侧边栏和主内容并排显示 */
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        .main-content-wrapper { /* 新增一个 wrapper 来包含主页内容，以便和侧边栏并排 */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem; /* p-6 */
+            margin-left: 250px; /* 关键：为固定侧边栏留出空间 */
+            overflow-y: auto; /* 关键：确保主内容区域可以滚动 */
+            min-height: 100vh; /* 确保主内容区域至少和视口一样高，以触发滚动 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左侧导航侧边栏容器 -->
+    <div id="sidebar-container">
+        <!-- 侧边栏内容将通过 JavaScript 加载到这里 -->
+    </div>
+
+    <!-- 右侧主内容区域的包装器 -->
+    <div class="main-content-wrapper">
+        <div class="w-full max-w-4xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl flex flex-col items-center border-b-4 border-purple-300">
+          <header class="mb-8 text-center">
+            <h1 class="text-5xl sm:text-6xl font-extrabold text-purple-900 drop-shadow-lg leading-tight">
+              圣经希腊语学习平台
+            </h1>
+            <p class="text-xl sm:text-2xl text-purple-700 mt-3 font-medium">
+              系统学习，深入原文，掌握圣经原貌
+            </p>
+          </header>
+
+          <nav class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-3xl mt-8">
+            <!-- 语法学习链接更新为指向 grammar_lessons.html 的第一章 -->
+            <a href="grammar_lessons.html?chapter=1" class="block bg-blue-50 hover:bg-blue-100 p-6 rounded-lg shadow-md text-center transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer border border-blue-200">
+              <h2 class="text-3xl font-bold text-blue-800 mb-2">语法学习</h2>
+              <p class="text-lg text-gray-700">掌握希腊语语法</p>
+            </a>
+
+            <!-- 背单词链接现在指向 vocabulary_index.html -->
+            <a href="vocabulary_index.html" class="block bg-yellow-50 hover:bg-yellow-100 p-6 rounded-lg shadow-md text-center transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer border border-yellow-200">
+              <h2 class="text-3xl font-bold text-yellow-800 mb-2">背单词</h2>
+              <p class="text-lg text-gray-700">记忆核心词汇</p>
+            </a>
+
+            <a href="#" class="block bg-green-50 hover:bg-green-100 p-6 rounded-lg shadow-md text-center transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer border border-green-200">
+              <h2 class="text-3xl font-bold text-green-800 mb-2">读经文</h2>
+              <p class="text-lg text-gray-700">解析新约圣经原文</p>
+            </a>
+
+            <a href="#" class="block bg-red-50 hover:bg-red-100 p-6 rounded-lg shadow-md text-center transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer border border-red-200">
+              <h2 class="text-3xl font-bold text-red-800 mb-2">做习题</h2>
+              <p class="text-lg text-gray-700">巩固知识，练习习题</p>
+            </a>
+
+            <a href="#" class="block bg-indigo-50 hover:bg-indigo-100 p-6 rounded-lg shadow-md text-center transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer border border-indigo-200">
+              <h2 class="text-3xl font-bold text-indigo-800 mb-2">翻译训练</h2>
+              <p class="text-lg text-gray-700">提升希腊语翻译</p>
+            </a>
+
+            <a href="greek_alphabet.html" class="block bg-purple-50 hover:bg-purple-100 p-6 rounded-lg shadow-md text-center transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer border border-purple-200">
+              <h2 class="text-3xl font-bold text-purple-800 mb-2">学习希腊语字母</h2>
+              <p class="text-lg text-gray-700">从基础开始学习</p>
+            </a>
+          </nav>
+
+          <footer class="mt-12 text-gray-600 text-base text-center">
+            <p>© 2025 圣经希腊语学习平台. 保留所有权利.</p>
+          </footer>
+        </div>
+    </div>
+
+    <script>
+        // 激活侧边栏链接的函数
+        function activateSidebarLinks() {
+            const currentPath = window.location.pathname.split('/').pop();
+            const links = document.querySelectorAll('.sidebar-link');
+            const detailsElements = document.querySelectorAll('.sidebar-details');
+
+            // 首先关闭所有折叠菜单
+            detailsElements.forEach(detail => {
+                detail.removeAttribute('open');
+            });
+
+            links.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                let linkPath = linkHref.split('?')[0].split('/').pop();
+                let isActive = false;
+
+                if (linkPath === currentPath) {
+                    if (currentPath === 'grammar_lessons.html') {
+                        const currentChapterParam = new URLSearchParams(window.location.search).get('chapter');
+                        const linkChapterParam = new URLSearchParams(linkHref.split('?')[1]).get('chapter');
+                        if (linkChapterParam === currentChapterParam) {
+                            isActive = true;
+                        }
+                    } else if (currentPath === 'vocabulary_lesson.html') { // 针对新的动态词汇页面
+                        const currentBookParam = new URLSearchParams(window.location.search).get('book');
+                        const currentSectionParam = new URLSearchParams(window.location.search).get('section');
+                        const linkBookParam = new URLSearchParams(linkHref.split('?')[1]).get('book');
+                        const linkSectionParam = new URLSearchParams(linkHref.split('?')[1]).get('section');
+
+                        if (linkBookParam === currentBookParam && linkSectionParam === currentSectionParam) {
+                            isActive = true;
+                        }
+                    } else if (currentPath === 'vocabulary_index.html') {
+                        // 如果是 vocabulary_index.html，并且它就是当前页面，则激活它
+                        isActive = true;
+                    } else {
+                        isActive = true; // 其他非带参数的页面
+                    }
+                }
+
+                if (isActive) {
+                    link.classList.add('active');
+                    // 如果是子链接，展开其父级 <details>
+                    let parentDetails = link.closest('.sidebar-details');
+                    if (parentDetails) {
+                        parentDetails.setAttribute('open', '');
+                        // 如果是两层嵌套的子链接（如马太福音1:1），还需要展开它的祖父级
+                        let grandParentDetails = parentDetails.closest('.sidebar-details');
+                        if (grandParentDetails) {
+                            grandParentDetails.setAttribute('open', '');
+                        }
+                    }
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        // 侧边栏加载函数
+        async function loadSidebar() {
+            const sidebarContainer = document.getElementById('sidebar-container');
+            try {
+                const response = await fetch('navigation_sidebar.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                sidebarContainer.innerHTML = text;
+                activateSidebarLinks(); // 加载内容后激活链接
+            } catch (e) {
+                console.error("加载侧边栏失败:", e);
+                sidebarContainer.innerHTML = '<div class="p-4 text-red-500">加载导航失败。</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebar();
+        });
+    </script>
+    <script src="./js/sidebar_logic.js"></script>
+</body>
+</html>

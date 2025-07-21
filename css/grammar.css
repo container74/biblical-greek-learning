@@ -1,0 +1,168 @@
+/* css/grammar.css */
+
+/* 通用样式，确保字体平滑和盒模型一致 */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* 章节标题和副标题的额外样式 */
+#chapter-main-title {
+    letter-spacing: 0.025em; /* tracking-wide */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#chapter-subtitle {
+    font-style: italic;
+    color: #4a5568; /* gray-700 */
+}
+
+/* 章节内容区域的文本样式 */
+section p {
+    margin-bottom: 1rem;
+    line-height: 1.75; /* leading-relaxed */
+}
+
+section h2, section h3, section h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #2b6cb0; /* blue-700 */
+}
+
+section h2 {
+    font-size: 2.25rem; /* text-4xl */
+    font-weight: 700; /* font-bold */
+}
+
+section h3 {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 600; /* font-semibold */
+}
+
+section h4 {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 600; /* font-semibold */
+}
+
+/* 列表样式 */
+ul.list-disc, ul.list-circle {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+ul.list-disc li {
+    list-style-type: disc;
+    margin-bottom: 0.5rem;
+}
+
+ul.list-circle li {
+    list-style-type: circle;
+    margin-bottom: 0.5rem;
+}
+
+/* 链接样式 */
+a {
+    color: #4299e1; /* blue-500 */
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+    color: #2b6cb0; /* blue-700 */
+    text-decoration: underline;
+}
+
+/* 示例块样式 */
+.example-block {
+    background-color: #e0f2fe; /* light blue-100 */
+    border-left: 4px solid #38b2ac; /* teal-500 */
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.example-block p {
+    margin-bottom: 0.5rem;
+}
+
+.example-block .font-greek {
+    color: #2c5282; /* blue-800 */
+}
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.75rem; /* rounded-lg */
+    overflow: hidden; /* 确保圆角可见 */
+}
+
+table th, table td {
+    border: 1px solid #e2e8f0; /* gray-200 */
+    padding: 1rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+table th {
+    background-color: #edf2f7; /* gray-100 */
+    font-weight: 700; /* font-bold */
+    color: #2d3748; /* gray-800 */
+    text-transform: uppercase;
+    font-size: 0.875rem; /* text-sm */
+    letter-spacing: 0.05em; /* tracking-wider */
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #f7fafc; /* gray-50 */
+}
+
+table tbody tr:hover {
+    background-color: #ebf8ff; /* blue-50 */
+}
+
+/* 希腊语字体特定样式 */
+.font-greek {
+    font-family: 'Noto Serif', serif;
+    font-weight: 400; /* Regular */
+}
+
+.font-greek.font-bold {
+    font-weight: 700; /* Bold */
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    #chapter-main-title {
+        font-size: 3rem; /* text-4xl on small screens */
+    }
+    #chapter-subtitle {
+        font-size: 1.25rem; /* text-xl on small screens */
+    }
+    section h2 {
+        font-size: 1.75rem; /* text-3xl on small screens */
+    }
+    section h3 {
+        font-size: 1.5rem; /* text-2xl on small screens */
+    }
+    section h4 {
+        font-size: 1.25rem; /* text-xl on small screens */
+    }
+    .chapter-nav-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    table th, table td {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+    }
+}

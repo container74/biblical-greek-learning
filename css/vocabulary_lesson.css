@@ -1,0 +1,87 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    min-height: 100vh;
+    background-color: #f3f4f6; /* bg-gray-100 */
+}
+.font-greek {
+    font-family: 'Noto Serif', serif;
+}
+.main-content-scroll {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+/* 课程卡片样式 */
+#lesson-card {
+    background-color: #ffffff; /* bg-white */
+    padding: 2rem; /* p-8 */
+    border-radius: 0.75rem; /* rounded-lg */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    text-align: center;
+    max-width: 28rem; /* max-w-md */
+    width: 100%;
+    margin: 0 auto;
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+}
+#lesson-card:hover {
+    transform: scale(1.01);
+}
+/* 进度条容器 */
+.progress-bar-container {
+    background-color: #e2e8f0; /* bg-gray-200 */
+    border-radius: 9999px; /* rounded-full */
+    height: 1rem; /* h-4 */
+    overflow: hidden;
+}
+/* 进度条填充 */
+#progress-bar {
+    background-color: #10b981; /* bg-green-500 */
+    height: 100%;
+    border-radius: 9999px; /* rounded-full */
+    transition: width 0.3s ease-out;
+}
+/* 音频播放按钮 */
+.audio-button {
+    background-color: #4c51bf; /* bg-indigo-700 */
+    color: white;
+    padding: 0.75rem; /* p-3 */
+    border-radius: 9999px; /* rounded-full */
+    font-size: 1.5rem; /* text-2xl */
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.audio-button:hover {
+    background-color: #3730a3; /* bg-indigo-800 */
+    transform: scale(1.1);
+}
+/* 导航按钮 (上一课/下一课) */
+.nav-button {
+    background-color: #a78bfa; /* bg-purple-300 */
+    color: white;
+    padding: 0.75rem 1.5rem; /* py-3 px-6 */
+    border-radius: 9999px; /* rounded-full */
+    font-weight: 600; /* font-semibold */
+    transition: background-color 0.2s, transform 0.2s;
+}
+.nav-button:hover {
+    background-color: #8b5cf6; /* bg-purple-500 */
+    transform: scale(1.05);
+}
+/* 完成今日学习按钮 */
+.complete-button {
+    background-color: #10b981; /* bg-green-500 */
+    color: white;
+    padding: 1rem 2rem; /* py-4 px-8 */
+    border-radius: 9999px; /* rounded-full */
+    font-weight: 700; /* font-bold */
+    font-size: 1.25rem; /* text-xl */
+    transition: background-color 0.2s, transform 0.2s;
+}
+.complete-button:hover {
+    background-color: #059669; /* bg-green-600 */
+    transform: scale(1.05);
+}

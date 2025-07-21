@@ -1,0 +1,70 @@
+/* css/vocabulary_index.css */
+
+/* 您可以在这里添加 vocabulary_index.html 页面的特定样式 */
+/* 例如，如果需要对页面标题或导航卡片进行更精细的控制 */
+
+/* 页面主标题样式 */
+.main-content-wrapper header h1 {
+    letter-spacing: 0.025em; /* tracking-wide */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 页面副标题样式 */
+.main-content-wrapper header p {
+    font-style: italic;
+    color: #4a5568; /* gray-700 */
+}
+
+/* 导航卡片（书卷链接）的通用样式 */
+.main-content-wrapper nav a {
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: block; /* 确保链接块级显示 */
+    text-decoration: none; /* 移除下划线 */
+}
+
+.main-content-wrapper nav a:hover {
+    transform: translateY(-5px); /* 悬停时上浮效果 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 更明显的阴影 */
+}
+
+/* 导航卡片内的标题 */
+.main-content-wrapper nav a h2 {
+    margin-bottom: 0.5rem;
+}
+
+/* 导航卡片内的描述文本 */
+.main-content-wrapper nav a p {
+    color: #6b7280; /* gray-600 */
+}
+
+/* 底部页脚样式 */
+footer {
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb; /* gray-200 */
+    margin-top: 3rem;
+    text-align: center;
+    color: #6b7280; /* gray-600 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+    .main-content-wrapper header h1 {
+        font-size: 3rem; /* text-4xl on small screens */
+    }
+    .main-content-wrapper header p {
+        font-size: 1.125rem; /* text-lg on small screens */
+    }
+    .main-content-wrapper nav {
+        grid-template-columns: 1fr; /* 单列布局 */
+    }
+    .main-content-wrapper nav a {
+        padding: 1.25rem; /* 调整内边距 */
+    }
+    .main-content-wrapper nav a h2 {
+        font-size: 2rem; /* text-2xl on small screens */
+    }
+    .main-content-wrapper nav a p {
+        font-size: 0.875rem; /* text-sm on small screens */
+    }
+}

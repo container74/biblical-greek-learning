@@ -1,0 +1,36 @@
+{
+  "chapterOrder": [
+    "6",
+    "7",
+    "8",
+    "9",
+    "10"
+  ],
+  "chapters": {
+    "6": {
+      "title": "动词变位基础",
+      "subtitle": "第六章：动词现在时主动语态变位",
+      "content": "<p>本章将介绍希腊语动词现在时主动语态的基本变位规则。掌握动词变位是构建希腊语句子的关键。</p><h3 class=\"text-2xl font-semibold text-gray-800 mt-6 mb-3\">动词 <span class=\"font-greek\">λύω</span> (解开) 现在时主动语态示例</h3><table class=\"w-full text-left border border-gray-200 rounded-lg overflow-hidden my-4\"><thead><tr class=\"bg-blue-100\"><th class=\"p-3 border-r border-gray-200\">人称</th><th class=\"p-3\">单数</th><th class=\"p-3\">复数</th></tr></thead><tbody><tr><td class=\"p-3 border-r border-gray-200\">第一人称</td><td class=\"p-3 border-r border-gray-200 font-greek\">λύω</td><td class=\"p-3 font-greek\">λύομεν</td></tr><tr><td class=\"p-3 border-r border-gray-200\">第二人称</td><td class=\"p-3 border-r border-gray-200 font-greek\">λύεις</td><td class=\"p-3 font-greek\">λύετε</td></tr><tr><td class=\"p-3 border-r border-gray-200\">第三人称</td><td class=\"p-3 border-r border-gray-200 font-greek\">λύει</td><td class=\"p-3 font-greek\">λύουσι(ν)</td></tr></tbody></table><p><b>注意：</b> 此处为占位符内容，详细教学内容待补充。</p>"
+    },
+    "7": {
+      "title": "形容词与副词",
+      "subtitle": "第七章：希腊语形容词和副词的用法",
+      "content": "<p>本章将探讨希腊语形容词和副词的变位和用法，它们用于修饰名词、动词或其他形容词/副词。</p><p><b>注意：</b> 此处为占位符内容，详细教学内容待补充。</p>"
+    },
+    "8": {
+      "title": "代词",
+      "subtitle": "第八章：学习希腊语代词的种类和形式",
+      "content": "<p>本章将介绍希腊语中的各种代词，包括人称代词、指示代词、关系代词等。</p><p><b>注意：</b> 此处为占位符内容，详细教学内容待补充。</p>"
+    },
+    "9": {
+      "title": "连词与感叹词",
+      "subtitle": "第九章：连接词语和表达情感",
+      "content": "<p>本章将学习希腊语中用于连接句子或词语的连词，以及表达情感的感叹词。</p><p><b>注意：</b> 此处为占位符内容，详细教学内容待补充。</p>"
+    },
+    "10": {
+      "title": "简单句结构",
+      "subtitle": "第十章：构建基本的希腊语句子",
+      "content": "<p>本章将介绍希腊语简单句的基本构成，包括主语、谓语和宾语的排列。</p><p><b>注意：</b> 此处为占位符内容，详细教学内容待补充。</p>"
+    }
+  }
+}

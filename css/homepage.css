@@ -1,0 +1,16 @@
+/* css/homepage.css */
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex; /* 确保 body 采用 flex 布局，以便侧边栏和主内容并排显示 */
+    min-height: 100vh; /* 确保占据整个视口高度 */
+    background-color: #f3f4f6; /* bg-gray-100 */
+    /* 移除 align-items: center; 和 justify-content: center; */
+    /* 这些属性会干扰固定侧边栏的定位 */
+}
+.font-greek {
+    font-family: 'Noto Serif', serif;
+}

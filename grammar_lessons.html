@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title-dynamic">语法学习：章节详情</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 (主要用于UI文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入 Google Noto Serif 字体 (主要用于希腊语文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="./css/sidebar.css">
+    <link rel="stylesheet" href="./css/grammar.css"> <!-- 确保引入 grammar.css -->
+    <!-- 引入新的侧边栏逻辑JS文件 -->
+    <!-- 注意: 确保 sidebar_logic.js 包含 getUrlParameter 和 activateSidebarLinks 函数 -->
+    <script src="./js/sidebar_logic.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        .font-greek {
+            font-family: 'Noto Serif', serif;
+        }
+        .main-content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem; /* p-6 */
+            margin-left: 250px; /* 关键：为固定侧边栏留出空间 */
+            overflow-y: auto; /* 关键：确保主内容区域可以滚动 */
+            min-height: 100vh; /* 确保主内容区域至少和视口一样高，以触发滚动 */
+        }
+        /* 章节导航按钮样式 */
+        .chapter-nav-button {
+            background-color: #6366f1; /* indigo-500 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .chapter-nav-button:hover {
+            background-color: #4f46e5; /* indigo-600 */
+            transform: scale(1.05);
+        }
+        .chapter-nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        /* 章节内容区域的最小高度，防止内容过少时底部上移 */
+        .chapter-content-area {
+            min-height: 60vh; /* 示例值，可根据需要调整 */
+        }
+
+        /* 以下是您提供的原有样式，为了保持一致性，我将其保留并调整选择器以匹配新的HTML结构 */
+        .chapter-content {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            max-width: 48rem; /* 更宽一点以容纳内容 */
+            width: 100%;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        .chapter-content h2 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1a202c; /* gray-900 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .chapter-content p {
+            margin-bottom: 1rem;
+        }
+        .chapter-content ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .chapter-content li {
+            margin-bottom: 0.5rem;
+        }
+        /* 表格样式 */
+        .chapter-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.75rem; /* rounded-lg */
+            overflow: hidden; /* 确保圆角可见 */
+        }
+
+        .chapter-content table th, .chapter-content table td {
+            border: 1px solid #e2e8f0; /* gray-200 */
+            padding: 1rem;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .chapter-content table th {
+            background-color: #edf2f7; /* gray-100 */
+            font-weight: 700; /* font-bold */
+            color: #2d3748; /* gray-800 */
+            text-transform: uppercase;
+            font-size: 0.875rem; /* text-sm */
+            letter-spacing: 0.05em; /* tracking-wider */
+        }
+
+        .chapter-content table tbody tr:nth-child(odd) {
+            background-color: #f7fafc; /* gray-50 */
+        }
+
+        .chapter-content table tbody tr:hover {
+            background-color: #ebf8ff; /* blue-50 */
+        }
+        /* 示例块样式 */
+        .example-block {
+            background-color: #e0f2fe; /* light blue-100 */
+            border-left: 4px solid #38b2ac; /* teal-500 */
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .example-block p {
+            margin-bottom: 0.5rem;
+        }
+
+        .example-block .font-greek {
+            color: #2c5282; /* blue-800 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左侧导航侧边栏容器 -->
+    <div id="sidebar-container">
+        <!-- 侧边栏内容将通过 JavaScript 加载到这里 -->
+    </div>
+
+    <!-- 右侧主内容区域的包装器 -->
+    <div class="main-content-wrapper">
+        <header class="mb-10 text-center">
+            <h1 id="chapter-main-title" class="text-5xl font-extrabold text-blue-900 drop-shadow-lg">
+                语法学习
+            </h1>
+            <p id="chapter-subtitle" class="text-xl text-blue-700 mt-3"></p>
+        </header>
+
+        <div class="w-full max-w-4xl bg-white p-8 rounded-xl shadow-2xl flex flex-col items-center border-b-4 border-blue-300">
+            <!-- 章节导航按钮 -->
+            <div class="flex justify-between w-full max-w-md mb-6">
+                <button id="prev-chapter-button" class="chapter-nav-button">
+                    &larr; 上一章
+                </button>
+                <button id="next-chapter-button" class="chapter-nav-button">
+                    下一章 &rarr;
+                </button>
+            </div>
+
+            <!-- 章节内容将动态加载到这里 -->
+            <div id="chapter-content" class="w-full chapter-content-area">
+                <!-- 内容将由 JavaScript 渲染 -->
+                <p class="text-center text-gray-500">正在加载语法章节...</p>
+            </div>
+
+            <div class="w-full flex justify-center mt-10">
+                <a href="homepage.html" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-400 text-lg">
+                    返回主页
+                </a>
+            </div>
+        </div>
+
+        <footer class="mt-16 text-gray-700 text-base">
+            <p>© 2025 圣经希腊语学习应用. 保留所有权利.</p>
+        </footer>
+    </div>
+
+    <script>
+        // 语法章节数据将动态加载
+        let grammarData = { chapters: {}, chapterOrder: [] };
+        let currentChapter = ''; // 当前章节的键 (例如 "1", "6", "11")
+
+        // 获取 DOM 元素
+        const pageMainTitleEl = document.getElementById('chapter-main-title');
+        const pageSubtitleEl = document.getElementById('chapter-subtitle');
+        const chapterContentEl = document.getElementById('chapter-content');
+        const prevChapterButton = document.getElementById('prev-chapter-button');
+        const nextChapterButton = document.getElementById('next-chapter-button');
+        const sidebarContainer = document.getElementById('sidebar-container');
+
+        // 自定义模态框显示函数 (代替 alert)
+        function showCustomAlert(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50';
+            alertDiv.innerHTML = `
+                <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
+                    <p class="text-2xl font-semibold text-gray-800 mb-6">${message}</p>
+                    <button id="custom-alert-ok" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                        确定
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(alertDiv);
+
+            document.getElementById('custom-alert-ok').onclick = () => {
+                document.body.removeChild(alertDiv);
+            };
+        }
+
+        // 异步加载所有语法章节数据
+        async function loadGrammarData() {
+            const jsonFiles = [
+                './data/grammar_lessons1.json',
+                './data/grammar_lessons2.json',
+                './data/grammar_lessons3.json',
+                './data/grammar_lessons4.json'
+            ];
+
+            try {
+                // Initialize grammarData.chapters as an empty object before merging
+                grammarData.chapters = {};
+                grammarData.chapterOrder = [];
+
+                for (const filePath of jsonFiles) {
+                    const response = await fetch(filePath);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status} from ${filePath}`);
+                    }
+                    const data = await response.json();
+                    Object.assign(grammarData.chapters, data.chapters); // Merge chapters
+                    grammarData.chapterOrder = grammarData.chapterOrder.concat(data.chapterOrder); // Concatenate chapter orders
+                }
+                console.log("成功加载所有语法章节数据。");
+                // Sort chapterOrder numerically if they are strings like "1", "2", "10"
+                grammarData.chapterOrder.sort((a, b) => parseInt(a) - parseInt(b));
+
+            } catch (e) {
+                console.error("加载语法章节数据失败:", e);
+                // 显示错误信息，并禁用导航按钮
+                pageMainTitleEl.textContent = "错误：加载失败";
+                pageSubtitleEl.textContent = "无法加载语法章节数据，请检查文件。";
+                chapterContentEl.innerHTML = '<p class="text-red-500">请检查 `data/grammar_lessons1.json`, `data/grammar_lessons_part2.json`, `data/grammar_lessons_part3.json`, `data/grammar_lessons_part4.json` 文件是否存在且格式正确。</p>';
+                prevChapterButton.disabled = true;
+                nextChapterButton.disabled = true;
+                return false; // Indicate failure
+            }
+            return true; // Indicate success
+        }
+
+        // 渲染当前章节内容
+        function renderChapter() {
+            const chapterData = grammarData.chapters[currentChapter];
+
+            if (!chapterData) {
+                pageMainTitleEl.textContent = '章节未找到';
+                pageSubtitleEl.textContent = '';
+                chapterContentEl.innerHTML = '<p class="text-red-500 text-center text-xl">抱歉，未找到该章节内容。</p>';
+                prevChapterButton.disabled = true;
+                nextChapterButton.disabled = true;
+                return;
+            }
+
+            pageMainTitleEl.textContent = `语法学习：${chapterData.title}`;
+            pageSubtitleEl.textContent = chapterData.subtitle; // 确保更新的是 pageSubtitleEl
+            chapterContentEl.innerHTML = chapterData.content; // 使用 .content 作为HTML字符串
+
+            // 更新章节导航按钮状态
+            const currentChapterIndex = grammarData.chapterOrder.indexOf(currentChapter);
+            prevChapterButton.disabled = currentChapterIndex === 0;
+            nextChapterButton.disabled = currentChapterIndex === grammarData.chapterOrder.length - 1;
+        }
+
+        // 侧边栏加载函数 (如果需要，可以从 navigation_sidebar.html 加载)
+        async function loadSidebar() {
+            try {
+                const response = await fetch('navigation_sidebar.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                sidebarContainer.innerHTML = text;
+                // 确保 window.activateSidebarLinks 可用并调用
+                if (window.activateSidebarLinks) {
+                    window.activateSidebarLinks();
+                } else {
+                    console.error("window.activateSidebarLinks 未定义。请确保 sidebar_logic.js 已正确加载。");
+                }
+            } catch (e) {
+                console.error("加载侧边栏失败:", e);
+                sidebarContainer.innerHTML = '<div class="p-4 text-red-500">加载导航失败。</div>';
+            }
+        }
+
+        // 事件监听器
+        prevChapterButton.addEventListener('click', () => {
+            const currentChapterIndex = grammarData.chapterOrder.indexOf(currentChapter);
+            if (currentChapterIndex > 0) {
+                currentChapter = grammarData.chapterOrder[currentChapterIndex - 1];
+                renderChapter();
+                // 更新URL以反映当前章节
+                window.history.pushState({}, '', `?chapter=${currentChapter}`); // 使用章节键直接作为参数
+                if (window.activateSidebarLinks) { // 确保函数存在 before calling
+                    window.activateSidebarLinks(); // 重新激活侧边栏链接
+                }
+            }
+        });
+
+        nextChapterButton.addEventListener('click', () => {
+            const currentChapterIndex = grammarData.chapterOrder.indexOf(currentChapter);
+            if (currentChapterIndex < grammarData.chapterOrder.length - 1) {
+                currentChapter = grammarData.chapterOrder[currentChapterIndex + 1];
+                renderChapter();
+                // 更新URL以反映当前章节
+                window.history.pushState({}, '', `?chapter=${currentChapter}`); // 使用章节键直接作为参数
+                if (window.activateSidebarLinks) { // 确保函数存在 before calling
+                    window.activateSidebarLinks(); // 重新激活侧边栏链接
+                }
+            }
+        });
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 先加载语法数据
+            const dataLoaded = await loadGrammarData();
+            if (!dataLoaded) {
+                return; // 停止后续操作
+            }
+
+            // 确保 window.getUrlParameter 已定义
+            if (typeof window.getUrlParameter === 'function') {
+                const initialChapter = window.getUrlParameter('chapter'); // 使用全局函数
+                if (initialChapter && grammarData.chapters[initialChapter]) {
+                    currentChapter = initialChapter;
+                } else {
+                    currentChapter = grammarData.chapterOrder[0]; // 默认加载第一个章节
+                }
+            } else {
+                console.warn("getUrlParameter 函数未定义，将使用默认章节。");
+                currentChapter = grammarData.chapterOrder[0]; // 如果函数未定义，也默认加载第一个章节
+            }
+            
+            loadSidebar(); // 加载侧边栏
+            renderChapter(); // 渲染当前章节
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>背单词：单词学习</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 (主要用于UI文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入 Google Noto Serif 字体 (主要用于希腊语文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="./css/sidebar.css"> <!-- 引入侧边栏样式 -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        .font-greek {
+            font-family: 'Noto Serif', serif;
+        }
+        .main-content-wrapper { /* 统一使用 main-content-wrapper */
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem; /* p-6 */
+            margin-left: 250px; /* 为固定侧边栏留出空间 */
+            min-height: 100vh; /* 确保主内容区域至少和视口一样高，以触发滚动 */
+        }
+        .lesson-card {
+            background-color: #ffffff; /* bg-white */
+            padding: 2rem; /* p-8 */
+            border-radius: 0.75rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            text-align: center;
+            max-width: 28rem; /* max-w-md */
+            width: 100%;
+            margin: 0 auto;
+            transform: scale(1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .lesson-card:hover {
+            transform: scale(1.01);
+        }
+        .progress-bar-container {
+            background-color: #e2e8f0; /* bg-gray-200 */
+            border-radius: 9999px; /* rounded-full */
+            height: 1rem; /* h-4 */
+            overflow: hidden;
+        }
+        .progress-bar {
+            background-color: #10b981; /* bg-green-500 */
+            height: 100%;
+            border-radius: 9999px; /* rounded-full */
+            transition: width 0.3s ease-out;
+        }
+        .audio-button {
+            background-color: #4c51bf; /* bg-indigo-700 */
+            color: white;
+            padding: 0.75rem; /* p-3 */
+            border-radius: 9999px; /* rounded-full */
+            font-size: 1.5rem; /* text-2xl */
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .audio-button:hover {
+            background-color: #3730a3; /* bg-indigo-800 */
+            transform: scale(1.1);
+        }
+        .nav-button {
+            background-color: #a78bfa; /* bg-purple-300 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .nav-button:hover {
+            background-color: #8b5cf6; /* bg-purple-500 */
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .complete-button {
+            background-color: #10b981; /* bg-green-500 */
+            color: white;
+            padding: 1rem 2rem; /* py-4 px-8 */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 700; /* font-bold */
+            font-size: 1.25rem; /* text-xl */
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .complete-button:hover {
+            background-color: #059669; /* bg-green-600 */
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左侧导航侧边栏容器 -->
+    <div id="sidebar-container">
+        <!-- 侧边栏内容将通过 JavaScript 加载到这里 -->
+    </div>
+
+    <!-- 右侧主内容区域 -->
+    <div class="main-content-wrapper">
+        <header class="mb-10 text-center">
+            <h1 id="page-title" class="text-5xl font-extrabold text-yellow-900 drop-shadow-lg">
+                背单词：单词学习
+            </h1>
+            <p id="page-subtitle" class="text-xl text-yellow-700 mt-3"></p>
+        </header>
+
+        <div class="w-full max-w-4xl bg-white p-8 rounded-xl shadow-2xl flex flex-col items-center border-b-4 border-yellow-300">
+            <!-- 章节导航按钮 (上一节/下一节) -->
+            <div class="flex justify-between w-full max-w-md mb-6">
+                <button id="prev-section-button" class="nav-button">
+                    &larr; 上一节
+                </button>
+                <button id="next-section-button" class="nav-button">
+                    下一节 &rarr;
+                </button>
+            </div>
+
+            <!-- 进度条 -->
+            <div class="w-full max-w-md bg-gray-200 rounded-full h-4 mb-8 overflow-hidden">
+                <div id="progress-bar" class="bg-yellow-500 h-4 rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div>
+            </div>
+
+            <!-- 单词卡片 -->
+            <div class="lesson-card">
+                <div class="flex items-center justify-center mb-6">
+                    <h2 id="greek-word" class="text-6xl font-bold text-yellow-800 font-greek mr-4 leading-tight"></h2>
+                    <button id="play-button" class="audio-button" aria-label="朗读希腊语单词">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.152a1 1 0 010 1.696l-4.606 3.455A1 1 0 018 15.152V8.848a1 1 0 011.146-.152l4.606 3.455z" />
+                        </svg>
+                    </button>
+                </div>
+                <p id="pronunciation" class="text-2xl text-gray-700 mb-3 italic"></p>
+                <p id="chinese-meaning" class="text-4xl text-gray-900 mb-6 font-semibold"></p>
+                <p id="example-sentence" class="text-xl text-gray-600 border-t-2 border-yellow-100 pt-6 mt-6 italic leading-relaxed">
+                    例句: <span id="example-text" class="block mt-2 text-gray-800 font-greek text-2xl"></span>
+                </p>
+            </div>
+
+            <!-- 单词导航按钮 (上一个/下一个) -->
+            <div class="flex justify-between w-full max-w-md mt-10 space-x-6">
+                <button id="prev-word-button" class="nav-button">
+                    &larr; 上一个
+                </button>
+                <button id="next-word-button" class="nav-button">
+                    下一个 &rarr;
+                </button>
+            </div>
+
+            <button id="complete-daily-button" class="complete-button mt-12">
+                完成今日学习
+            </button>
+        </div>
+
+        <footer class="mt-16 text-gray-700 text-base">
+            <p>© 2025 圣经希腊语学习应用. 保留所有权利.</p>
+        </footer>
+    </div>
+
+    <script src="./js/sidebar_logic.js"></script> <!-- 确保 sidebar_logic.js 已加载 -->
+    <script>
+        // 圣经希腊语词汇数据，按书卷和章节划分
+        const vocabularyData = {
+            'matthew': {
+                bookTitle: '马太福音词汇',
+                sections: {
+                    '1_1': {
+                        title: '马太福音 1:1',
+                        subtitle: '学习并记忆《马太福音》第一章第一节的核心词汇',
+                        words: [
+                            { greek: "βίβλος", pronunciation: "bíblos", chinese: "书，卷轴", example: "βίβλος γενέσεως Ἰησοῦ Χριστοῦ", audioUrl: "./audio/matthew_1/biblos.mp3" },
+                            { greek: "γένεσις", pronunciation: "génesis", chinese: "家谱，起源，诞生", example: "βίβλος γενέσεως Ἰησοῦ Χριστοῦ", audioUrl: "./audio/matthew_1/geneseos.mp3" },
+                            { greek: "Ἰησοῦ", pronunciation: "Iēsou", chinese: "耶稣 (属格)", example: "βίβλος γενέσεως Ἰησοῦ Χριστοῦ", audioUrl: "./audio/matthew_1/iesou.mp3" },
+                            { greek: "Χριστοῦ", pronunciation: "Christou", chinese: "基督 (属格)", example: "βίβλος γενέσεως Ἰησοῦ Χριστοῦ", audioUrl: "./audio/matthew_1/christou.mp3" },
+                            { greek: "υἱοῦ", pronunciation: "huiou", chinese: "儿子 (属格)", example: "υἱοῦ Δαυὶδ υἱοῦ Ἀβραάμ", audioUrl: "./audio/matthew_1/huiou.mp3" },
+                            { greek: "Δαυὶδ", pronunciation: "Dauid", chinese: "大卫", example: "υἱοῦ Δαυὶδ", audioUrl: "./audio/matthew_1/dauid.mp3" },
+                            { greek: "Ἀβραάμ", pronunciation: "Abraam", chinese: "亚伯拉罕", example: "Ἀβραὰμ ἐγέννησεν τὸν Ἰσαάκ", audioUrl: "./audio/matthew_1/abraam.mp3" }
+                        ]
+                    },
+                    '1_2_part1': {
+                        title: '马太福音 1:2 (一)',
+                        subtitle: '学习并记忆《马太福音》第一章第二节（第一部分）的核心词汇',
+                        words: [
+                            { greek: "ἐγέννησεν", pronunciation: "egennēsen", chinese: "生了 (动词)", example: "Ἀβραὰμ ἐγέννησεν τὸν Ἰσαάκ", audioUrl: "./audio/matthew_1/egenneesen.mp3" },
+                            { greek: "Ἰσαάκ", pronunciation: "Isaak", chinese: "以撒", example: "Ἀβραὰμ ἐγέννησεν τὸν Ἰσαάκ", audioUrl: "./audio/matthew_1/isaak.mp3" },
+                            { greek: "Ἰακὼβ", pronunciation: "Iakōb", chinese: "雅各", example: "Ἰσαὰκ δὲ ἐγέννησεν τὸν Ἰακὼβ", audioUrl: "./audio/matthew_1/iakob.mp3" },
+                            { greek: "Ἰούδαν", pronunciation: "Ioudan", chinese: "犹大", example: "Ἰακὼβ δὲ ἐγέννησεν τὸν Ἰούδαν", audioUrl: "./audio/matthew_1/ioudan.mp3" }
+                        ]
+                    },
+                    '1_2_part2': {
+                        title: '马太福音 1:2 (二)',
+                        subtitle: '学习并记忆《马太福音》第一章第二节（第二部分）的核心词汇',
+                        words: [
+                            { greek: "Φάρες", pronunciation: "Phares", chinese: "法勒斯", example: "Ἰούδας δὲ ἐγέννησεν τὸν Φάρες", audioUrl: "./audio/matthew_1/phares.mp3" },
+                            { greek: "Ζάρα", pronunciation: "Zara", chinese: "谢拉", example: "καὶ τὸν Ζάρα ἐκ τῆς Θάμαρ", audioUrl: "./audio/matthew_1/zara.mp3" },
+                            { greek: "Θάμαρ", pronunciation: "Thamar", chinese: "他玛", example: "ἐκ τῆς Θάμαρ", audioUrl: "./audio/matthew_1/thamar.mp3" },
+                            { greek: "Ἑσρὼμ", pronunciation: "Hesrōm", chinese: "希斯仑", example: "Φάρες δὲ ἐγέννησεν τὸν Ἑσρὼμ", audioUrl: "./audio/matthew_1/hesrom.mp3" },
+                            { greek: "Ἀράμ", pronunciation: "Aram", chinese: "亚兰", example: "Ἑσρὼμ δὲ ἐγέννησεν τὸν Ἀράμ", audioUrl: "./audio/matthew_1/aram.mp3" }
+                        ]
+                    }
+                },
+                sectionOrder: ['1_1', '1_2_part1', '1_2_part2'] // 马太福音章节顺序
+            },
+            '1_john': {
+                bookTitle: '约翰一书词汇',
+                sections: {
+                    '1_1': {
+                        title: '约翰一书 1:1',
+                        subtitle: '学习并记忆《约翰一书》第一章第一节的核心词汇',
+                        words: [
+                            { greek: "ὃ", pronunciation: "ho", chinese: "那 (关系代词)", example: "ὃ ἦν ἀπ’ ἀρχῆς", audioUrl: "./audio/1_john_1/ho.mp3" },
+                            { greek: "ἦν", pronunciation: "ēn", chinese: "是 (未完成时)", example: "ὃ ἦν ἀπ’ ἀρχῆς", audioUrl: "./audio/1_john_1/en.mp3" },
+                            { greek: "ἀπ’", pronunciation: "ap'", chinese: "从 (介词)", example: "ἀπ’ ἀρχῆς", audioUrl: "./audio/1_john_1/ap.mp3" },
+                            { greek: "ἀρχῆς", pronunciation: "archēs", chinese: "起初，开始 (属格)", example: "ἀπ’ ἀρχῆς", audioUrl: "./audio/1_john_1/arches.mp3" },
+                            { greek: "ὃ", pronunciation: "ho", chinese: "那 (关系代词)", example: "ὃ ἀκηκόαμεν", audioUrl: "./audio/1_john_1/akekoamen.mp3" },
+                            { greek: "ἀκηκόαμεν", pronunciation: "akēkoamen", chinese: "我们所听见的 (完成时)", example: "ὃ ἀκηκόαμεν", audioUrl: "./audio/1_john_1/akekoamen.mp3" },
+                            { greek: "ὃ", pronunciation: "ho", chinese: "那 (关系代词)", example: "ὃ ἑωράκαμεν", audioUrl: "./audio/1_john_1/ho_3.mp3" },
+                            { greek: "ἑωράκαμεν", pronunciation: "heōrakamen", chinese: "我们所看见的 (完成时)", example: "ὃ ἑωράκαμεν", audioUrl: "./audio/1_john_1/heōrakamen.mp3" },
+                            { greek: "τοῖς", pronunciation: "tois", chinese: "那些 (与格复数)", example: "τοῖς ὀφθαλμοῖς ἡμῶν", audioUrl: "./audio/1_john_1/tois.mp3" },
+                            { greek: "ὀφθαλμοῖς", pronunciation: "ophthalmois", chinese: "眼睛 (与格复数)", example: "τοῖς ὀφθαλμοῖς ἡμῶν", audioUrl: "./audio/1_john_1/ophthalmois.mp3" },
+                            { greek: "ἡμῶν", pronunciation: "hēmōn", chinese: "我们的 (属格)", example: "τοῖς ὀφθαλμοῖς ἡμῶν", audioUrl: "./audio/1_john_1/hemon.mp3" },
+                            { greek: "ὃ", pronunciation: "ho", chinese: "那 (关系代词)", pronunciation: "ho", chinese: "那 (关系代词)", example: "ὃ ἐθεασάμεθα", audioUrl: "./audio/1_john_1/ho_4.mp3" },
+                            { greek: "ἐθεασάμεθα", pronunciation: "etheasametha", chinese: "我们所瞻仰的 (不定过去时)", example: "ὃ ἐθεασάμεθα", audioUrl: "./audio/1_john_1/etheasametha.mp3" },
+                            { greek: "καὶ", pronunciation: "kai", chinese: "和，也", example: "καὶ αἱ χεῖρες ἡμῶν", audioUrl: "./audio/1_john_1/kai.mp3" },
+                            { greek: "αἱ", pronunciation: "hai", chinese: "那些 (阴性主格复数)", example: "αἱ χεῖρες ἡμῶν", audioUrl: "./audio/1_john_1/hai.mp3" },
+                            { greek: "χεῖρες", pronunciation: "cheires", chinese: "手 (主格复数)", example: "αἱ χεῖρες ἡμῶν", audioUrl: "./audio/1_john_1/cheires.mp3" },
+                            { greek: "ἐψηλάφησαν", pronunciation: "epsēlaphēsan", chinese: "我们所摸过的 (不定过去时)", example: "αἱ χεῖρες ἡμῶν ἐψηλάφησαν", audioUrl: "./audio/1_john_1/epsalaphesan.mp3" },
+                            { greek: "περὶ", pronunciation: "peri", chinese: "关于 (介词)", example: "περὶ τοῦ λόγου τῆς ζωῆς", audioUrl: "./audio/1_john_1/peri.mp3" },
+                            { greek: "τοῦ", pronunciation: "tou", chinese: "那 (属格单数)", example: "περὶ τοῦ λόγου τῆς ζωῆς", audioUrl: "./audio/1_john_1/tou.mp3" },
+                            { greek: "λόγου", pronunciation: "logou", chinese: "道，话语 (属格)", example: "περὶ τοῦ λόγου τῆς ζωῆς", audioUrl: "./audio/1_john_1/logou.mp3" },
+                            { greek: "τῆς", pronunciation: "tēs", chinese: "那 (阴性属格单数)", example: "τῆς ζωῆς", audioUrl: "./audio/1_john_1/tes.mp3" },
+                            { greek: "ζωῆς", pronunciation: "zōēs", chinese: "生命 (属格)", example: "τῆς ζωῆς", audioUrl: "./audio/1_john_1/zoes.mp3" }
+                        ]
+                    }
+                    // 未来可以添加更多约翰一书章节
+                },
+                sectionOrder: ['1_1'] // 约翰一书章节顺序 (这里需要根据实际的约翰一书章节来调整)
+            }
+            // 未来可以添加更多书卷
+        };
+
+        let currentBookKey = 'matthew'; // 默认书卷
+        let currentSectionKey = '1_1';  // 默认章节
+        let currentWordIndex = 0;
+        let currentAudio = null;
+
+        // 获取 DOM 元素
+        const pageTitleEl = document.getElementById('page-title');
+        const pageSubtitleEl = document.getElementById('page-subtitle');
+        const greekWordEl = document.getElementById('greek-word');
+        const pronunciationEl = document.getElementById('pronunciation');
+        const chineseMeaningEl = document.getElementById('chinese-meaning');
+        const exampleTextEl = document.getElementById('example-text');
+        const exampleSentenceEl = document.getElementById('example-sentence');
+        const playButton = document.getElementById('play-button');
+        const prevSectionButton = document.getElementById('prev-section-button');
+        const nextSectionButton = document.getElementById('next-section-button');
+        const prevWordButton = document.getElementById('prev-word-button');
+        const nextWordButton = document.getElementById('next-word-button');
+        const completeDailyButton = document.getElementById('complete-daily-button');
+        const progressBar = document.getElementById('progress-bar');
+        const sidebarContainer = document.getElementById('sidebar-container'); // 获取侧边栏容器
+
+        // 自定义模态框显示函数 (代替 alert)
+        function showCustomAlert(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50';
+            alertDiv.innerHTML = `
+                <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
+                    <p class="text-2xl font-semibold text-gray-800 mb-6">${message}</p>
+                    <button id="custom-alert-ok" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                        确定
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(alertDiv);
+
+            document.getElementById('custom-alert-ok').onclick = () => {
+                document.body.removeChild(alertDiv);
+            };
+        }
+
+        // 初始化页面：根据URL参数加载书卷、章节和单词索引
+        function initializePage() {
+            // 使用全局的 getUrlParameter 函数
+            const requestedBook = window.getUrlParameter('book');
+            const requestedSection = window.getUrlParameter('section');
+            const requestedWordIndex = window.getUrlParameter('wordIndex'); // 获取单词索引
+
+            console.log("初始化页面...");
+            console.log(`请求的书卷: ${requestedBook}, 请求的章节: ${requestedSection}, 请求的单词索引: ${requestedWordIndex}`);
+
+            if (requestedBook && vocabularyData[requestedBook]) {
+                currentBookKey = requestedBook;
+                console.log(`设置当前书卷为: ${currentBookKey}`);
+            } else {
+                currentBookKey = Object.keys(vocabularyData)[0]; // 默认第一个书卷
+                console.warn(`未指定书卷或书卷无效，默认设置为: ${currentBookKey}`);
+            }
+
+            const bookSections = vocabularyData[currentBookKey].sections;
+            const currentBookSectionOrder = vocabularyData[currentBookKey].sectionOrder;
+
+            if (requestedSection && bookSections[requestedSection] && currentBookSectionOrder.includes(requestedSection)) {
+                currentSectionKey = requestedSection;
+                console.log(`设置当前章节为: ${currentSectionKey}`);
+            } else {
+                currentSectionKey = currentBookSectionOrder[0]; // 默认当前书卷的第一个章节
+                console.warn(`未指定章节或章节无效，默认设置为: ${currentSectionKey}`);
+            }
+
+            // 设置单词索引
+            const wordsInCurrentSection = vocabularyData[currentBookKey].sections[currentSectionKey].words;
+            if (requestedWordIndex !== '' && !isNaN(parseInt(requestedWordIndex))) {
+                const parsedIndex = parseInt(requestedWordIndex);
+                if (parsedIndex >= 0 && parsedIndex < wordsInCurrentSection.length) {
+                    currentWordIndex = parsedIndex;
+                    console.log(`设置当前单词索引为: ${currentWordIndex}`);
+                } else {
+                    currentWordIndex = 0; // 无效索引，默认从第一个单词开始
+                    console.warn(`请求的单词索引 ${requestedWordIndex} 无效，默认从第一个单词开始。`);
+                }
+            } else {
+                currentWordIndex = 0; // 默认从第一个单词开始
+                console.log("未指定单词索引，默认从第一个单词开始。");
+            }
+
+            console.log(`开始渲染章节: ${currentBookKey} - ${currentSectionKey}，单词索引: ${currentWordIndex}`);
+            renderSection();
+        }
+
+        // 渲染当前章节和单词
+        function renderSection() {
+            const bookData = vocabularyData[currentBookKey];
+            const sectionData = bookData.sections[currentSectionKey];
+
+            if (!sectionData) {
+                console.error(`渲染失败: 未找到书卷 ${currentBookKey} 的章节 ${currentSectionKey} 的词汇数据。`);
+                pageTitleEl.textContent = "错误：章节未找到";
+                pageSubtitleEl.textContent = "请检查URL或选择其他章节。";
+                greekWordEl.textContent = '';
+                pronunciationEl.textContent = '';
+                chineseMeaningEl.textContent = '';
+                exampleTextEl.textContent = '';
+                exampleSentenceEl.style.display = 'none';
+                progressBar.style.width = '0%';
+                prevSectionButton.disabled = true;
+                nextSectionButton.disabled = true;
+                prevWordButton.disabled = true;
+                nextWordButton.disabled = true;
+                return;
+            }
+
+            pageTitleEl.textContent = `背单词：${bookData.bookTitle} - ${sectionData.title}`;
+            pageSubtitleEl.textContent = sectionData.subtitle;
+
+            console.log(`正在渲染章节: ${sectionData.title}`);
+            renderWord(); // 渲染当前单词
+
+            // 更新章节导航按钮状态
+            const currentSectionIndexInBook = bookData.sectionOrder.indexOf(currentSectionKey);
+            prevSectionButton.disabled = currentSectionIndexInBook === 0;
+            nextSectionButton.disabled = currentSectionIndexInBook === bookData.sectionOrder.length - 1;
+        }
+
+        // 渲染当前单词卡片
+        function renderWord() {
+            const words = vocabularyData[currentBookKey].sections[currentSectionKey].words;
+
+            if (!words || words.length === 0) {
+                console.warn(`章节 ${currentBookKey} - ${currentSectionKey} 没有词汇。`);
+                greekWordEl.textContent = '';
+                pronunciationEl.textContent = '';
+                chineseMeaningEl.textContent = '当前章节没有词汇';
+                exampleTextEl.textContent = '';
+                exampleSentenceEl.style.display = 'none';
+                progressBar.style.width = '0%';
+                prevWordButton.disabled = true;
+                nextWordButton.disabled = true;
+                return;
+            }
+
+            const word = words[currentWordIndex];
+            if (!word) {
+                console.error(`渲染单词失败: 索引 ${currentWordIndex} 在章节 ${currentBookKey} - ${currentSectionKey} 中不存在。`);
+                greekWordEl.textContent = '加载错误';
+                pronunciationEl.textContent = '';
+                chineseMeaningEl.textContent = '无法加载单词';
+                exampleTextEl.textContent = '';
+                exampleSentenceEl.style.display = 'none';
+                progressBar.style.width = '0%';
+                prevWordButton.disabled = true;
+                nextWordButton.disabled = true;
+                return;
+            }
+
+            greekWordEl.textContent = word.greek;
+            pronunciationEl.textContent = `[${word.pronunciation}]`;
+            chineseMeaningEl.textContent = word.chinese;
+
+            if (word.example) {
+                exampleTextEl.textContent = word.example;
+                exampleSentenceEl.style.display = 'block';
+            } else {
+                exampleTextEl.textContent = '';
+                exampleSentenceEl.style.display = 'none';
+            }
+
+            // 更新进度条
+            const progress = ((currentWordIndex + 1) / words.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // 更新单词导航按钮状态
+            prevWordButton.disabled = currentWordIndex === 0;
+            nextWordButton.disabled = currentWordIndex === words.length - 1;
+        }
+
+        // 播放发音
+        function playPronunciation() {
+            const words = vocabularyData[currentBookKey].sections[currentSectionKey].words;
+            if (!words || words.length === 0) {
+                showCustomAlert("当前章节没有词汇可供发音。");
+                return;
+            }
+            const word = words[currentWordIndex];
+
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+
+            if (word.audioUrl) {
+                currentAudio = new Audio(word.audioUrl);
+                currentAudio.play().catch(e => {
+                    console.error("播放音频失败:", e);
+                    showCustomAlert("播放音频失败，请检查音频文件路径或浏览器权限。");
+                });
+            } else if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word.greek);
+                utterance.lang = 'el-GR'; // 尝试设置希腊语语音
+
+                const voices = window.speechSynthesis.getVoices();
+                const greekVoice = voices.find(voice => voice.lang === 'el-GR' || voice.lang.startsWith('el-'));
+                if (greekVoice) {
+                    utterance.voice = greekVoice;
+                } else {
+                    console.warn("未找到希腊语语音，将使用默认语音朗读。");
+                }
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showCustomAlert("抱歉，您的浏览器不支持文本转语音功能，且未提供自定义音频。");
+            }
+        }
+
+        // 导航到上一节
+        prevSectionButton.addEventListener('click', () => {
+            const bookData = vocabularyData[currentBookKey];
+            const bookSections = bookData.sectionOrder;
+            const currentSectionIndexInBook = bookSections.indexOf(currentSectionKey);
+            if (currentSectionIndexInBook > 0) {
+                currentSectionKey = bookSections[currentSectionIndexInBook - 1];
+                currentWordIndex = 0; // 切换章节时从第一个单词开始
+                renderSection();
+                // 更新URL以反映当前章节
+                window.history.pushState({}, '', `?book=${currentBookKey}&section=${currentSectionKey}`);
+                // 使用全局的 activateSidebarLinks 函数
+                if (window.activateSidebarLinks) {
+                    window.activateSidebarLinks();
+                } else {
+                    console.error("window.activateSidebarLinks 未定义。");
+                }
+            }
+        });
+
+        // 导航到下一节
+        nextSectionButton.addEventListener('click', () => {
+            const bookData = vocabularyData[currentBookKey];
+            const bookSections = bookData.sectionOrder;
+            const currentSectionIndexInBook = bookSections.indexOf(currentSectionKey);
+            if (currentSectionIndexInBook < bookSections.length - 1) {
+                currentSectionKey = bookSections[currentSectionIndexInBook + 1];
+                currentWordIndex = 0; // 切换章节时从第一个单词开始
+                renderSection();
+                // 更新URL以反映当前章节
+                window.history.pushState({}, '', `?book=${currentBookKey}&section=${currentSectionKey}`);
+                // 使用全局的 activateSidebarLinks 函数
+                if (window.activateSidebarLinks) {
+                    window.activateSidebarLinks();
+                } else {
+                    console.error("window.activateSidebarLinks 未定义。");
+                }
+            } else {
+                showCustomAlert("恭喜！您已学完本卷所有词汇。");
+            }
+        });
+
+        // 导航到上一课 (单词)
+        prevWordButton.addEventListener('click', () => {
+            const words = vocabularyData[currentBookKey].sections[currentSectionKey].words;
+            if (currentWordIndex > 0) {
+                currentWordIndex--;
+                renderWord();
+            }
+        });
+
+        // 导航到下一课 (单词)
+        nextWordButton.addEventListener('click', () => {
+            const words = vocabularyData[currentBookKey].sections[currentSectionKey].words;
+            if (currentWordIndex < words.length - 1) {
+                currentWordIndex++;
+                renderWord();
+            } else {
+                showCustomAlert("恭喜！您已学完本节所有词汇。");
+            }
+        });
+
+        // 播放按钮事件
+        playButton.addEventListener('click', playPronunciation);
+
+        // 完成今日学习按钮事件
+        completeDailyButton.addEventListener('click', () => {
+            showCustomAlert("恭喜您！今天的学习已完成！");
+            // 在这里可以添加更复杂的逻辑，例如保存进度到本地存储
+        });
+
+        // 侧边栏加载函数
+        async function loadSidebar() {
+            console.log("正在加载侧边栏...");
+            try {
+                const response = await fetch('navigation_sidebar.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                sidebarContainer.innerHTML = text;
+                console.log("侧边栏加载完成，激活链接。");
+                // 确保 window.activateSidebarLinks 可用并调用
+                if (window.activateSidebarLinks) {
+                    window.activateSidebarLinks();
+                } else {
+                    console.error("window.activateSidebarLinks 未定义。请确保 sidebar_logic.js 已正确加载。");
+                }
+            } catch (e) {
+                console.error("加载侧边栏失败:", e);
+                sidebarContainer.innerHTML = '<div class="p-4 text-red-500">加载导航失败。</div>';
+            }
+        }
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebar();
+            initializePage(); // 初始化词汇学习页面
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>习题与考试：章节目录</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 (主要用于UI文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入 Google Noto Serif 字体 (主要用于希腊语文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="./css/sidebar.css">
+    <link rel="stylesheet" href="./css/vocabulary_index.css"> <!-- 复用词汇目录的样式，因为布局相似 -->
+    <style>
+        /* 确保 body 采用 flex 布局，以便侧边栏和主内容并排显示 */
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        .font-greek {
+            font-family: 'Noto Serif', serif;
+        }
+        .main-content-wrapper {
+            margin-left: 250px; /* 侧边栏宽度 */
+            flex-grow: 1;
+            padding: 2rem;
+            max-width: 1200px; /* 限制内容最大宽度 */
+            width: 100%;
+            box-sizing: border-box;
+            overflow-y: auto; /* 允许内容滚动 */
+        }
+        .chapter-card {
+            background-color: #ffffff; /* bg-white */
+            border-radius: 0.75rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            padding: 1.5rem;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .chapter-card h2 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2c5282; /* blue-800 */
+            margin-bottom: 0.5rem;
+        }
+        .chapter-card p {
+            color: #4a5568; /* gray-700 */
+            font-size: 1rem; /* text-base */
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏容器 -->
+    <div id="sidebar-container">
+        <!-- 侧边栏内容将由 JavaScript 加载 -->
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content-wrapper flex flex-col items-center py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight" style="letter-spacing: 0.025em; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">习题与考试</h1>
+            <p class="text-xl text-gray-700 italic">选择章节进行习题练习和翻译训练</p>
+        </header>
+
+        <main class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 章节卡片将由 JavaScript 动态加载 -->
+        </main>
+
+        <div class="mt-12 text-center">
+            <a href="homepage.html" class="inline-flex items-center px-8 py-4 bg-purple-500 text-white font-bold rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-400 text-lg">
+                返回主页
+            </a>
+        </div>
+
+        <footer class="mt-16 text-gray-700 text-base">
+            <p>© 2025 圣经希腊语学习应用. 保留所有权利.</p>
+        </footer>
+    </div>
+
+    <!-- 引入 sidebar_logic.js -->
+    <script src="./js/sidebar_logic.js"></script>
+    <script>
+        // 侧边栏加载函数
+        async function loadSidebar() {
+            console.log("正在加载侧边栏...");
+            try {
+                const response = await fetch('navigation_sidebar.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                document.getElementById('sidebar-container').innerHTML = text;
+                console.log("侧边栏加载完成，激活链接。");
+                // 确保 window.activateSidebarLinks 可用并调用
+                if (window.activateSidebarLinks) {
+                    window.activateSidebarLinks();
+                } else {
+                    console.error("window.activateSidebarLinks 未定义。请确保 sidebar_logic.js 已正确加载。");
+                }
+            } catch (e) {
+                console.error("加载侧边栏失败:", e);
+                document.getElementById('sidebar-container').innerHTML = '<div class="p-4 text-red-500">加载导航失败。</div>';
+            }
+        }
+
+        // 加载习题章节数据并渲染卡片
+        async function loadExercisesChapters() {
+            try {
+                const response = await fetch('./data/exercises_chapters.json'); // 假设习题章节数据在这个文件
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                const mainContent = document.querySelector('main');
+                mainContent.innerHTML = ''; // 清空现有内容
+
+                data.chapterOrder.forEach(chapterId => {
+                    const chapter = data.chapters[chapterId];
+                    if (chapter) {
+                        const chapterCard = document.createElement('a');
+                        chapterCard.href = `exercise_lesson.html?chapter=${chapterId}`; // 链接到具体的习题页面
+                        chapterCard.className = 'chapter-card block';
+                        chapterCard.innerHTML = `
+                            <h2 class="text-2xl font-semibold text-blue-800 mb-2">${chapter.title}</h2>
+                            <p class="text-gray-700">${chapter.subtitle}</p>
+                        `;
+                        mainContent.appendChild(chapterCard);
+                    }
+                });
+            } catch (e) {
+                console.error("加载习题章节数据失败:", e);
+                const mainContent = document.querySelector('main');
+                mainContent.innerHTML = '<p class="text-red-500 text-center">加载习题章节数据失败，请检查 `data/exercises_chapters.json` 文件。</p>';
+            }
+        }
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebar();
+            loadExercisesChapters();
+        });
+    </script>
+</body>
+</html>

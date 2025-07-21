@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>背单词：书卷目录</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 (主要用于UI文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入 Google Noto Serif 字体 (主要用于希腊语文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="./css/sidebar.css"> <!-- 引入侧边栏样式 -->
+    <style>
+        /* 确保 body 采用 flex 布局，以便侧边栏和主内容并排显示 */
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        /* 主内容区域的包装器，为侧边栏留出空间并允许滚动 */
+        .main-content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem; /* p-6 */
+            margin-left: 250px; /* 关键：为固定侧边栏留出空间 */
+            overflow-y: auto; /* 关键：确保主内容区域可以滚动 */
+            min-height: 100vh; /* 确保主内容区域至少和视口一样高，以触发滚动 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左侧导航侧边栏容器 -->
+    <div id="sidebar-container">
+        <!-- 侧边栏内容将通过 JavaScript 加载到这里 -->
+    </div>
+
+    <!-- 右侧主内容区域的包装器 -->
+    <div class="main-content-wrapper">
+        <header class="mb-10 text-center">
+            <h1 class="text-5xl font-extrabold text-yellow-900 drop-shadow-lg">
+                背单词：圣经书卷目录
+            </h1>
+            <p class="text-xl text-yellow-700 mt-3">选择您想学习词汇的圣经书卷</p>
+        </header>
+
+        <div class="w-full max-w-3xl bg-white p-8 rounded-xl shadow-2xl flex flex-col items-center border-b-4 border-yellow-300">
+            <nav class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+                <!-- 马太福音词汇入口 -->
+                <!-- 点击后跳转到 vocabulary_lesson.html 并传递参数 -->
+                <a href="vocabulary_lesson.html?book=matthew&section=1_1" class="block bg-yellow-50 hover:bg-yellow-100 p-6 rounded-lg shadow-md text-center transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer border border-yellow-200">
+                    <h2 class="text-3xl font-bold text-yellow-800 mb-2">马太福音词汇</h2>
+                    <p class="text-lg text-gray-700">从《马太福音》开始学习</p>
+                </a>
+                <!-- 约翰一书词汇入口 -->
+                <!-- 点击后跳转到 vocabulary_lesson.html 并传递参数 -->
+                <a href="vocabulary_lesson.html?book=1_john&section=1_1" class="block bg-yellow-50 hover:bg-yellow-100 p-6 rounded-lg shadow-md text-center transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer border border-yellow-200">
+                    <h2 class="text-3xl font-bold text-yellow-800 mb-2">约翰一书词汇</h2>
+                    <p class="text-lg text-gray-700">从《约翰一书》开始学习</p>
+                </a>
+                <!-- 未来可以在这里添加更多书卷的词汇链接 -->
+            </nav>
+
+            <div class="w-full flex justify-center mt-10">
+                <a href="homepage.html" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-400 text-lg">
+                    返回主页
+                </a>
+            </div>
+        </div>
+
+        <footer class="mt-16 text-gray-700 text-base">
+            <p>© 2025 圣经希腊语学习应用. 保留所有权利.</p>
+        </footer>
+    </div>
+
+    <!-- 引入 sidebar_logic.js -->
+    <script src="./js/sidebar_logic.js"></script>
+    <script>
+        // 侧边栏加载函数
+        async function loadSidebar() {
+            const sidebarContainer = document.getElementById('sidebar-container');
+            try {
+                const response = await fetch('navigation_sidebar.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                sidebarContainer.innerHTML = text;
+                // 确保 activateSidebarLinks 可用并调用
+                if (window.activateSidebarLinks) {
+                    window.activateSidebarLinks();
+                } else {
+                    console.error("window.activateSidebarLinks 未定义。请确保 sidebar_logic.js 已正确加载。");
+                }
+            } catch (e) {
+                console.error("加载侧边栏失败:", e);
+                sidebarContainer.innerHTML = '<div class="p-4 text-red-500">加载导航失败。</div>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebar();
+        });
+    </script>
+</body>
+</html>

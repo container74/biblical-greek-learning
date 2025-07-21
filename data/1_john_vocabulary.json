@@ -1,0 +1,198 @@
+{
+  "bookTitle": "约翰一书",
+  "sectionOrder": [
+    "1_1"
+  ],
+  "sections": {
+    "1_1": {
+      "title": "约翰一书 1:1",
+      "subtitle": "论生命之道",
+      "words": [
+        {
+          "id": 1,
+          "greek": "ὃ",
+          "pronunciation": "ho",
+          "chinese": "那（关系代词，中性主格单数）",
+          "example": "ὃ ἦν ἀπ’ ἀρχῆς (那从起初原有的)",
+          "audioUrl": "./audio/1_john_1/ho.mp3"
+        },
+        {
+          "id": 2,
+          "greek": "ἦν",
+          "pronunciation": "ēn",
+          "chinese": "是（动词，未完成时）",
+          "example": "ὃ ἦν ἀπ’ ἀρχῆς (那从起初原有的)",
+          "audioUrl": "./audio/1_john_1/en.mp3"
+        },
+        {
+          "id": 3,
+          "greek": "ἀπ’",
+          "pronunciation": "ap'",
+          "chinese": "从，自（介词，缩略形式）",
+          "example": "ἀπ’ ἀρχῆς (从起初)",
+          "audioUrl": "./audio/1_john_1/ap.mp3"
+        },
+        {
+          "id": 4,
+          "greek": "ἀρχῆς",
+          "pronunciation": "archēs",
+          "chinese": "起初（名词，属格）",
+          "example": "ἀπ’ ἀρχῆς (从起初)",
+          "audioUrl": "./audio/1_john_1/arches.mp3"
+        },
+        {
+          "id": 5,
+          "greek": "ὃ",
+          "pronunciation": "ho",
+          "chinese": "那（关系代词，中性宾格单数）",
+          "example": "ὃ ἀκηκόαμεν (我们所听见的)",
+          "audioUrl": "./audio/1_john_1/ho.mp3"
+        },
+        {
+          "id": 6,
+          "greek": "ἀκηκόαμεν",
+          "pronunciation": "akēkoamen",
+          "chinese": "我们已经听见（动词，完成时）",
+          "example": "ὃ ἀκηκόαμεν (我们所听见的)",
+          "audioUrl": "./audio/1_john_1/akekoamen.mp3"
+        },
+        {
+          "id": 7,
+          "greek": "ὃ",
+          "pronunciation": "ho",
+          "chinese": "那（关系代词，中性宾格单数）",
+          "example": "ὃ ἑωράκαμεν τοῖς ὀφθαλμοῖς ἡμῶν (我们亲眼所看见的)",
+          "audioUrl": "./audio/1_john_1/ho.mp3"
+        },
+        {
+          "id": 8,
+          "greek": "ἑωράκαμεν",
+          "pronunciation": "heōrakamen",
+          "chinese": "我们已经看见（动词，完成时）",
+          "example": "ὃ ἑωράκαμεν τοῖς ὀφθαλμοῖς ἡμῶν (我们亲眼所看见的)",
+          "audioUrl": "./audio/1_john_1/heorakamen.mp3"
+        },
+        {
+          "id": 9,
+          "greek": "τοῖς",
+          "pronunciation": "tois",
+          "chinese": "那些（定冠词，中性与格复数）",
+          "example": "τοῖς ὀφθαλμοῖς ἡμῶν (我们的眼睛)",
+          "audioUrl": "./audio/1_john_1/tois.mp3"
+        },
+        {
+          "id": 10,
+          "greek": "ὀφθαλμοῖς",
+          "pronunciation": "ophthalmois",
+          "chinese": "眼睛（名词，与格复数）",
+          "example": "τοῖς ὀφθαλμοῖς ἡμῶν (我们的眼睛)",
+          "audioUrl": "./audio/1_john_1/ophthalmois.mp3"
+        },
+        {
+          "id": 11,
+          "greek": "ἡμῶν",
+          "pronunciation": "hēmōn",
+          "chinese": "我们的（代词，属格复数）",
+          "example": "τοῖς ὀφθαλμοῖς ἡμῶν (我们的眼睛)",
+          "audioUrl": "./audio/1_john_1/hemon.mp3"
+        },
+        {
+          "id": 12,
+          "greek": "ὃ",
+          "pronunciation": "ho",
+          "chinese": "那（关系代词，中性宾格单数）",
+          "example": "ὃ ἐθεασάμεθα (我们所瞻望的)",
+          "audioUrl": "./audio/1_john_1/ho.mp3"
+        },
+        {
+          "id": 13,
+          "greek": "ἐθεασάμεθα",
+          "pronunciation": "etheasametha",
+          "chinese": "我们已经瞻望（动词，不定过去时中间语态）",
+          "example": "ὃ ἐθεασάμεθα (我们所瞻望的)",
+          "audioUrl": "./audio/1_john_1/etheasametha.mp3"
+        },
+        {
+          "id": 14,
+          "greek": "καὶ",
+          "pronunciation": "kai",
+          "chinese": "和，也（连词）",
+          "example": "καὶ αἱ χεῖρες ἡμῶν ἐψηλάφησαν (我们的手也摸过的)",
+          "audioUrl": "./audio/1_john_1/kai.mp3"
+        },
+        {
+          "id": 15,
+          "greek": "αἱ",
+          "pronunciation": "hai",
+          "chinese": "那些（定冠词，阴性主格复数）",
+          "example": "αἱ χεῖρες ἡμῶν (我们的手)",
+          "audioUrl": "./audio/1_john_1/hai.mp3"
+        },
+        {
+          "id": 16,
+          "greek": "χεῖρες",
+          "pronunciation": "cheires",
+          "chinese": "手（名词，主格复数）",
+          "example": "αἱ χεῖρες ἡμῶν (我们的手)",
+          "audioUrl": "./audio/1_john_1/cheires.mp3"
+        },
+        {
+          "id": 17,
+          "greek": "ἡμῶν",
+          "pronunciation": "hēmōn",
+          "chinese": "我们的（代词，属格复数）",
+          "example": "χεῖρες ἡμῶν (我们的手)",
+          "audioUrl": "./audio/1_john_1/hemon.mp3"
+        },
+        {
+          "id": 18,
+          "greek": "ἐψηλάφησαν",
+          "pronunciation": "epsēlaphesan",
+          "chinese": "他们已经摸过（动词，不定过去时）",
+          "example": "αἱ χεῖρες ἡμῶν ἐψηλάφησαν (我们的手也摸过的)",
+          "audioUrl": "./audio/1_john_1/epsalaphesan.mp3"
+        },
+        {
+          "id": 19,
+          "greek": "περὶ",
+          "pronunciation": "peri",
+          "chinese": "关于（介词）",
+          "example": "περὶ τοῦ λόγου τῆς ζωῆς (论到生命之道)",
+          "audioUrl": "./audio/1_john_1/peri.mp3"
+        },
+        {
+          "id": 20,
+          "greek": "τοῦ",
+          "pronunciation": "tou",
+          "chinese": "那（定冠词，阳性/中性属格单数）",
+          "example": "τοῦ λόγου (这道)",
+          "audioUrl": "./audio/1_john_1/tou.mp3"
+        },
+        {
+          "id": 21,
+          "greek": "λόγου",
+          "pronunciation": "logou",
+          "chinese": "道，话语（名词，属格）",
+          "example": "τοῦ λόγου (这道)",
+          "audioUrl": "./audio/1_john_1/logou.mp3"
+        },
+        {
+          "id": 22,
+          "greek": "τῆς",
+          "pronunciation": "tēs",
+          "chinese": "那（定冠词，阴性属格单数）",
+          "example": "τῆς ζωῆς (这生命)",
+          "audioUrl": "./audio/1_john_1/tes.mp3"
+        },
+        {
+          "id": 23,
+          "greek": "ζωῆς",
+          "pronunciation": "zōēs",
+          "chinese": "生命（名词，属格）",
+          "example": "τῆς ζωῆς (这生命)",
+          "audioUrl": "./audio/1_john_1/zoes.mp3"
+        }
+      ]
+    }
+  }
+}

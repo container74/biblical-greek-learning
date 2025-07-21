@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title-dynamic">习题：章节练习</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 (主要用于UI文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入 Google Noto Serif 字体 (主要用于希腊语文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="./css/sidebar.css">
+    <link rel="stylesheet" href="./css/vocabulary_lesson.css"> <!-- 复用部分通用样式 -->
+    <style>
+        /* Custom styles for exercise_lesson.html */
+        .main-content-wrapper {
+            margin-left: 250px; /* Sidebar width */
+            flex-grow: 1;
+            padding: 2rem;
+            max-width: 1200px; /* Limit content max width */
+            width: 100%;
+            box-sizing: border-box;
+            overflow-y: auto; /* Allow content scrolling */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to top */
+        }
+
+        #exercise-card {
+            background-color: #ffffff; /* bg-white */
+            padding: 2rem; /* p-8 */
+            border-radius: 0.75rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            text-align: center;
+            max-width: 36rem; /* max-w-lg */
+            width: 100%;
+            margin: 0 auto;
+            transform: scale(1);
+            transition: transform 0.3s ease-in-out;
+            min-height: 300px; /* Ensure card has a minimum height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #exercise-card:hover {
+            transform: scale(1.01);
+        }
+
+        .exercise-question {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #2d3748; /* gray-800 */
+            margin-bottom: 1.5rem;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem; /* space-y-3 */
+            margin-top: 1.5rem;
+        }
+
+        .option-button {
+            background-color: #e0e7ff; /* indigo-100 */
+            color: #3730a3; /* indigo-800 */
+            padding: 0.75rem 1.25rem; /* py-3 px-5 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 500; /* font-medium */
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .option-button:hover {
+            background-color: #c7d2fe; /* indigo-200 */
+            transform: translateY(-2px);
+        }
+
+        .option-button.correct {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+            border-color: #10b981; /* green-500 */
+        }
+
+        .option-button.incorrect {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+            border-color: #ef4444; /* red-500 */
+        }
+
+        .feedback-message {
+            margin-top: 1rem;
+            font-size: 1rem; /* text-base */
+            font-weight: 500;
+        }
+
+        .feedback-message.correct {
+            color: #10b981; /* green-500 */
+        }
+
+        .feedback-message.incorrect {
+            color: #ef4444; /* red-500 */
+        }
+
+        .explanation-text {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: #4a5568; /* gray-700 */
+            font-style: italic;
+        }
+
+        .fill-in-the-blank-input {
+            border: 2px solid #cbd5e0; /* gray-300 */
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 1.125rem;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            margin-top: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .fill-in-the-blank-input:focus {
+            outline: none;
+            border-color: #6366f1; /* indigo-500 */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+
+        .check-answer-button {
+            background-color: #4c51bf; /* bg-indigo-700 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            margin-top: 1.5rem;
+        }
+
+        .check-answer-button:hover {
+            background-color: #3730a3; /* bg-indigo-800 */
+            transform: scale(1.05);
+        }
+
+        /* Navigation buttons (Previous/Next Exercise) */
+        .nav-buttons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 36rem;
+            margin-top: 2rem;
+        }
+
+        .nav-button {
+            background-color: #a78bfa; /* bg-purple-300 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background-color: #8b5cf6; /* bg-purple-400 */
+            transform: scale(1.05);
+        }
+
+        .nav-button:disabled {
+            background-color: #d1d5db; /* gray-300 */
+            cursor: not-allowed;
+        }
+
+        /* Progress bar */
+        .progress-bar-container {
+            width: 80%;
+            max-width: 36rem;
+            background-color: #e2e8f0; /* bg-gray-200 */
+            border-radius: 9999px; /* rounded-full */
+            height: 1rem; /* h-4 */
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+
+        #progress-bar {
+            background-color: #10b981; /* bg-green-500 */
+            height: 100%;
+            border-radius: 9999px; /* rounded-full */
+            transition: width 0.3s ease-out;
+        }
+
+        /* Custom Alert Modal */
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+
+        .custom-alert-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-alert-box {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .custom-alert-overlay.show .custom-alert-box {
+            transform: translateY(0);
+        }
+
+        .custom-alert-box h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .custom-alert-box p {
+            font-size: 1rem;
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+        }
+
+        .custom-alert-box button {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .custom-alert-box button:hover {
+            background-color: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Container -->
+    <div id="sidebar-container">
+        <!-- Sidebar content will be loaded by JavaScript -->
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content-wrapper flex flex-col items-center py-8">
+        <header class="text-center mb-8">
+            <h1 id="page-main-title" class="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight" style="letter-spacing: 0.025em; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">习题练习</h1>
+            <p id="page-subtitle" class="text-xl text-gray-700 italic">加载中...</p>
+        </header>
+
+        <!-- Exercise Card -->
+        <div id="exercise-card" class="relative">
+            <h2 id="exercise-question" class="exercise-question"></h2>
+            <div id="exercise-content" class="flex flex-col items-center">
+                <!-- Exercise content (options, input) will be rendered here -->
+            </div>
+            <div id="feedback-area" class="mt-4">
+                <!-- Feedback messages will be displayed here -->
+            </div>
+            <button id="check-answer-button" class="check-answer-button hidden">检查答案</button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div id="progress-bar" style="width: 0%;"></div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons-container">
+            <button id="prev-exercise-button" class="nav-button" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                上一题
+            </button>
+            <button id="next-exercise-button" class="nav-button" disabled>
+                下一题
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="mt-12 text-center">
+            <a href="exercises_index.html" class="inline-flex items-center px-8 py-4 bg-purple-500 text-white font-bold rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-400 text-lg">
+                返回习题目录
+            </a>
+        </div>
+
+        <footer class="mt-16 text-gray-700 text-base">
+            <p>© 2025 圣经希腊语学习应用. 保留所有权利.</p>
+        </footer>
+    </div>
+
+    <!-- Custom Alert Modal Structure -->
+    <div id="custom-alert-overlay" class="custom-alert-overlay">
+        <div class="custom-alert-box">
+            <h3 id="alert-title"></h3>
+            <p id="alert-message"></p>
+            <button id="alert-ok-button">确定</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for sidebar logic and exercise functionality -->
+    <script src="./js/sidebar_logic.js"></script>
+    <script>
+        // Global variables
+        let exercisesData = null;
+        let currentChapterId = null;
+        let currentExerciseIndex = 0;
+        let currentChapterExercises = [];
+
+        // DOM elements
+        const pageMainTitleEl = document.getElementById('page-main-title');
+        const pageSubtitleEl = document.getElementById('page-subtitle');
+        const exerciseQuestionEl = document.getElementById('exercise-question');
+        const exerciseContentEl = document.getElementById('exercise-content');
+        const feedbackAreaEl = document.getElementById('feedback-area');
+        const checkAnswerButton = document.getElementById('check-answer-button');
+        const prevExerciseButton = document.getElementById('prev-exercise-button');
+        const nextExerciseButton = document.getElementById('next-exercise-button');
+        const progressBar = document.getElementById('progress-bar');
+        const customAlertOverlay = document.getElementById('custom-alert-overlay');
+        const alertTitleEl = document.getElementById('alert-title');
+        const alertMessageEl = document.getElementById('alert-message');
+        const alertOkButton = document.getElementById('alert-ok-button');
+
+        // --- Custom Alert Functions ---
+        function showCustomAlert(message, title = "提示") {
+            alertTitleEl.textContent = title;
+            alertMessageEl.textContent = message;
+            customAlertOverlay.classList.add('show');
+        }
+
+        function hideCustomAlert() {
+            customAlertOverlay.classList.remove('show');
+        }
+
+        alertOkButton.addEventListener('click', hideCustomAlert);
+        customAlertOverlay.addEventListener('click', (event) => {
+            if (event.target === customAlertOverlay) {
+                hideCustomAlert();
+            }
+        });
+
+        // --- Exercise Logic Functions ---
+
+        /**
+         * Updates the progress bar based on the current exercise index.
+         */
+        function updateProgressBar() {
+            if (currentChapterExercises.length === 0) {
+                progressBar.style.width = '0%';
+                return;
+            }
+            const progress = ((currentExerciseIndex + 1) / currentChapterExercises.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        /**
+         * Renders the current exercise based on its type.
+         */
+        function renderExercise() {
+            if (!currentChapterExercises || currentChapterExercises.length === 0) {
+                exerciseQuestionEl.textContent = "没有可用的习题。";
+                exerciseContentEl.innerHTML = '';
+                feedbackAreaEl.innerHTML = '';
+                checkAnswerButton.classList.add('hidden');
+                prevExerciseButton.disabled = true;
+                nextExerciseButton.disabled = true;
+                updateProgressBar();
+                return;
+            }
+
+            const exercise = currentChapterExercises[currentExerciseIndex];
+            exerciseQuestionEl.textContent = exercise.question;
+            exerciseContentEl.innerHTML = ''; // Clear previous content
+            feedbackAreaEl.innerHTML = ''; // Clear previous feedback
+            checkAnswerButton.classList.add('hidden'); // Hide check button by default
+
+            if (exercise.type === 'multiple-choice') {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container w-full';
+                exercise.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    button.textContent = option.text;
+                    button.dataset.index = index;
+                    button.addEventListener('click', () => handleMultipleChoice(button, exercise));
+                    optionsContainer.appendChild(button);
+                });
+                exerciseContentEl.appendChild(optionsContainer);
+            } else if (exercise.type === 'fill-in-the-blank' || exercise.type === 'translation') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'fill-in-the-blank-input';
+                input.placeholder = exercise.type === 'fill-in-the-blank' ? '填写答案' : '输入翻译';
+                input.id = 'answer-input';
+                exerciseContentEl.appendChild(input);
+                checkAnswerButton.classList.remove('hidden');
+                checkAnswerButton.onclick = () => handleTextAnswer(input.value, exercise);
+            }
+
+            updateNavigationButtons();
+            updateProgressBar();
+        }
+
+        /**
+         * Handles multiple-choice answer selection.
+         * @param {HTMLElement} selectedButton - The button clicked by the user.
+         * @param {Object} exercise - The current exercise object.
+         */
+        function handleMultipleChoice(selectedButton, exercise) {
+            const allOptionButtons = exerciseContentEl.querySelectorAll('.option-button');
+            allOptionButtons.forEach(btn => {
+                btn.disabled = true; // Disable all buttons after selection
+                const optionIndex = parseInt(btn.dataset.index);
+                if (exercise.options[optionIndex].isCorrect) {
+                    btn.classList.add('correct');
+                } else {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const selectedOptionIndex = parseInt(selectedButton.dataset.index);
+            const isCorrect = exercise.options[selectedOptionIndex].isCorrect;
+
+            const feedbackMessage = document.createElement('p');
+            feedbackMessage.className = 'feedback-message';
+            if (isCorrect) {
+                feedbackMessage.textContent = '回答正确！';
+                feedbackMessage.classList.add('correct');
+            } else {
+                feedbackMessage.textContent = '回答错误。';
+                feedbackMessage.classList.add('incorrect');
+            }
+            feedbackAreaEl.appendChild(feedbackMessage);
+
+            if (exercise.explanation) {
+                const explanationText = document.createElement('p');
+                explanationText.className = 'explanation-text';
+                explanationText.textContent = `解释: ${exercise.explanation}`;
+                feedbackAreaEl.appendChild(explanationText);
+            }
+        }
+
+        /**
+         * Handles fill-in-the-blank or translation answer submission.
+         * @param {string} userAnswer - The user's input.
+         * @param {Object} exercise - The current exercise object.
+         */
+        function handleTextAnswer(userAnswer, exercise) {
+            const correctAnswer = exercise.answer.trim().toLowerCase();
+            const normalizedUserAnswer = userAnswer.trim().toLowerCase();
+            const isCorrect = normalizedUserAnswer === correctAnswer;
+
+            const feedbackMessage = document.createElement('p');
+            feedbackMessage.className = 'feedback-message';
+            if (isCorrect) {
+                feedbackMessage.textContent = '回答正确！';
+                feedbackMessage.classList.add('correct');
+            } else {
+                feedbackMessage.textContent = `回答错误。正确答案是: ${exercise.answer}`;
+                feedbackMessage.classList.add('incorrect');
+            }
+            feedbackAreaEl.appendChild(feedbackMessage);
+
+            if (exercise.explanation) {
+                const explanationText = document.createElement('p');
+                explanationText.className = 'explanation-text';
+                explanationText.textContent = `解释: ${exercise.explanation}`;
+                feedbackAreaEl.appendChild(explanationText);
+            }
+
+            checkAnswerButton.disabled = true; // Disable check button after submission
+            const inputEl = document.getElementById('answer-input');
+            if (inputEl) inputEl.disabled = true; // Disable input
+        }
+
+        /**
+         * Updates the disabled state of navigation buttons.
+         */
+        function updateNavigationButtons() {
+            prevExerciseButton.disabled = currentExerciseIndex === 0;
+            nextExerciseButton.disabled = currentExerciseIndex === currentChapterExercises.length - 1;
+        }
+
+        // --- Event Listeners for Navigation ---
+        prevExerciseButton.addEventListener('click', () => {
+            if (currentExerciseIndex > 0) {
+                currentExerciseIndex--;
+                renderExercise();
+            }
+        });
+
+        nextExerciseButton.addEventListener('click', () => {
+            if (currentExerciseIndex < currentChapterExercises.length - 1) {
+                currentExerciseIndex++;
+                renderExercise();
+            } else {
+                showCustomAlert("恭喜！您已完成本章节所有习题。", "章节完成");
+            }
+        });
+
+        // --- Initialization ---
+
+        /**
+         * Initializes the exercise page by loading data and rendering the first exercise.
+         */
+        async function initializePage() {
+            // Get chapter ID from URL
+            if (typeof window.getUrlParameter === 'function') {
+                currentChapterId = window.getUrlParameter('chapter');
+            } else {
+                console.warn("getUrlParameter function is not defined. Using default chapter '1'.");
+                currentChapterId = '1'; // Fallback
+            }
+
+            if (!currentChapterId) {
+                pageMainTitleEl.textContent = "错误：章节未指定";
+                pageSubtitleEl.textContent = "请通过习题目录选择一个章节。";
+                return;
+            }
+
+            try {
+                const response = await fetch('./data/exercises_chapters.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                exercisesData = await response.json();
+
+                const chapter = exercisesData.chapters[currentChapterId];
+                if (chapter) {
+                    pageMainTitleEl.textContent = chapter.title;
+                    pageSubtitleEl.textContent = chapter.subtitle;
+                    currentChapterExercises = chapter.exercises;
+                    currentExerciseIndex = 0; // Start from the first exercise
+                    renderExercise();
+                } else {
+                    pageMainTitleEl.textContent = "错误：章节不存在";
+                    pageSubtitleEl.textContent = "找不到指定的习题章节。";
+                    exerciseContentEl.innerHTML = '';
+                    prevExerciseButton.disabled = true;
+                    nextExerciseButton.disabled = true;
+                }
+            } catch (e) {
+                console.error("加载习题数据失败:", e);
+                pageMainTitleEl.textContent = "错误：加载失败";
+                pageSubtitleEl.textContent = "无法加载习题数据，请检查文件。";
+                exerciseContentEl.innerHTML = '<p class="text-red-500 text-center">加载习题数据失败，请检查 `data/exercises_chapters.json` 文件是否存在且格式正确。</p>';
+                prevExerciseButton.disabled = true;
+                nextExerciseButton.disabled = true;
+            }
+        }
+
+        // Sidebar loading function
+        async function loadSidebar() {
+            console.log("正在加载侧边栏...");
+            try {
+                const response = await fetch('navigation_sidebar.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                document.getElementById('sidebar-container').innerHTML = text;
+                console.log("侧边栏加载完成，激活链接。");
+                if (window.activateSidebarLinks) {
+                    window.activateSidebarLinks();
+                } else {
+                    console.error("window.activateSidebarLinks 未定义。请确保 sidebar_logic.js 已正确加载。");
+                }
+            } catch (e) {
+                console.error("加载侧边栏失败:", e);
+                document.getElementById('sidebar-container').innerHTML = '<div class="p-4 text-red-500">加载导航失败。</div>';
+            }
+        }
+
+        // Execute on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebar();
+            initializePage();
+        });
+    </script>
+</body>
+</html>

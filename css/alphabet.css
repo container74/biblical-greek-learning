@@ -1,0 +1,65 @@
+/* css/alphabet.css */
+
+/* 您可以在这里添加希腊语字母页面的特定样式 */
+/* 例如： */
+.alphabet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.letter-card {
+    background-color: #f0f9ff; /* blue-50 */
+    border: 1px solid #bfdbfe; /* blue-200 */
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.letter-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.greek-char {
+    font-family: 'Noto Serif', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: #1e40af; /* blue-800 */
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.pronunciation-text {
+    font-size: 1.25rem;
+    color: #4a5568; /* gray-700 */
+    margin-bottom: 0.5rem;
+}
+
+.chinese-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2d3748; /* gray-800 */
+}
+
+.audio-button-alphabet {
+    background-color: #4c51bf; /* indigo-700 */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    margin-top: 1rem;
+}
+
+.audio-button-alphabet:hover {
+    background-color: #3730a3; /* indigo-800 */
+    transform: scale(1.05);
+}

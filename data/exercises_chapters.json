@@ -1,0 +1,131 @@
+{
+  "chapterOrder": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
+  ],
+  "chapters": {
+    "1": {
+      "title": "第一章：希腊语字母表习题",
+      "subtitle": "练习字母识别、发音和书写",
+      "exercises": [
+        {
+          "type": "multiple-choice",
+          "question": "以下哪个是希腊字母 Alpha 的小写形式？",
+          "options": [
+            { "text": "Α", "isCorrect": false },
+            { "text": "α", "isCorrect": true },
+            { "text": "β", "isCorrect": false },
+            { "text": "γ", "isCorrect": false }
+          ],
+          "explanation": "希腊字母 Alpha 的小写形式是 α。"
+        },
+        {
+          "type": "fill-in-the-blank",
+          "question": "希腊字母 ______ (大写) 的小写形式是 σ。",
+          "answer": "Σ",
+          "explanation": "Sigma 的大写是 Σ，小写是 σ (或词尾的 ς)。"
+        },
+        {
+          "type": "translation",
+          "question": "将希腊字母 'Ω' 翻译成中文名称。",
+          "answer": "欧米伽",
+          "explanation": "Ω 是希腊字母表中的最后一个字母，名称是欧米伽。"
+        }
+      ]
+    },
+    "2": {
+      "title": "第二章：名词入门习题",
+      "subtitle": "练习名词的识别和基本概念",
+      "exercises": [
+        {
+          "type": "multiple-choice",
+          "question": "在希腊语中，名词通常有几个格？",
+          "options": [
+            { "text": "3", "isCorrect": false },
+            { "text": "4", "isCorrect": false },
+            { "text": "5", "isCorrect": true },
+            { "text": "6", "isCorrect": false }
+          ],
+          "explanation": "希腊语名词通常有五个格：主格、属格、与格、宾格、呼格。"
+        },
+        {
+          "type": "fill-in-the-blank",
+          "question": "希腊语名词的 ______ (性) 包括阳性、阴性和中性。",
+          "answer": "性",
+          "explanation": "希腊语名词有三种性：阳性、阴性和中性。"
+        }
+      ]
+    },
+    "3": {
+      "title": "第三章：格和性习题",
+      "subtitle": "深入练习名词的格和性变化",
+      "exercises": [
+        {
+          "type": "multiple-choice",
+          "question": "以下哪个词是阳性名词？",
+          "options": [
+            { "text": "ἡ γυνή (女人)", "isCorrect": false },
+            { "text": "ὁ ἄνθρωπος (人)", "isCorrect": true },
+            { "text": "τὸ δῶρον (礼物)", "isCorrect": false }
+          ],
+          "explanation": "ὁ ἄνθρωπος 是阳性名词，ἡ γυνή 是阴性名词，τὸ δῶρον 是中性名词。"
+        },
+        {
+          "type": "translation",
+          "question": "将“主的道”翻译成希腊语 (使用属格)。",
+          "answer": "ὁ λόγος τοῦ κυρίου",
+          "explanation": "“主”的属格是 τοῦ κυρίου。"
+        }
+      ]
+    },
+    "4": {
+      "title": "第四章：介词习题",
+      "subtitle": "练习常用介词的用法和含义",
+      "exercises": [
+        {
+          "type": "multiple-choice",
+          "question": "介词 'ἐν' 通常与哪个格连用？",
+          "options": [
+            { "text": "主格", "isCorrect": false },
+            { "text": "属格", "isCorrect": false },
+            { "text": "与格", "isCorrect": true },
+            { "text": "宾格", "isCorrect": false }
+          ],
+          "explanation": "介词 ἐν (在...里) 通常与与格连用。"
+        },
+        {
+          "type": "fill-in-the-blank",
+          "question": "介词 'εἰς' 表示方向，通常与 ______ (格) 连用。",
+          "answer": "宾格",
+          "explanation": "介词 εἰς (进入，到...去) 通常与宾格连用。"
+        }
+      ]
+    },
+    "5": {
+      "title": "第五章：时态习题",
+      "subtitle": "练习动词不同时态的识别和翻译",
+      "exercises": [
+        {
+          "type": "multiple-choice",
+          "question": "希腊语动词 'ἔλυσα' 是什么时态？",
+          "options": [
+            { "text": "现在时", "isCorrect": false },
+            { "text": "未完成时", "isCorrect": false },
+            { "text": "不定过去时", "isCorrect": true },
+            { "text": "完成时", "isCorrect": false }
+          ],
+          "explanation": "ἔλυσα 是动词 λύω (解开) 的不定过去时形式。"
+        },
+        {
+          "type": "translation",
+          "question": "将“他正在写”翻译成希腊语 (使用未完成时)。",
+          "answer": "ἔγραφεν",
+          "explanation": "动词 γράφω (写) 的未完成时第三人称单数是 ἔγραφεν。"
+        }
+      ]
+    }
+  }
+}

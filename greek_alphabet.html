@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希腊语字母教学</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Inter 字体 (主要用于UI文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 引入 Google Noto Serif 字体 (主要用于希腊语文本) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="./css/alphabet.css">
+    <link rel="stylesheet" href="./css/sidebar.css"> <!-- 引入侧边栏样式 -->
+    <style>
+        /* 确保 body 采用 flex 布局，以便侧边栏和主内容并排显示 */
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        /* 主内容区域的包装器，为侧边栏留出空间并允许滚动 */
+        .main-content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem; /* p-6 */
+            margin-left: 250px; /* 关键：为固定侧边栏留出空间 */
+            overflow-y: auto; /* 关键：确保主内容区域可以滚动 */
+            min-height: 100vh; /* 确保主内容区域至少和视口一样高，以触发滚动 */
+        }
+        /* 模态框背景遮罩 */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        /* 模态框内容动画 */
+        .modal-overlay > div {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        /* 模态框内的导航按钮样式 */
+        .modal-nav-button {
+            background-color: #6366f1; /* indigo-500 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 9999px; /* rounded-full */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .modal-nav-button:hover {
+            background-color: #4f46e5; /* indigo-600 */
+            transform: scale(1.05);
+        }
+        .modal-nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左侧导航侧边栏容器 -->
+    <div id="sidebar-container">
+        <!-- 侧边栏内容将通过 JavaScript 加载到这里 -->
+    </div>
+
+    <!-- 右侧主内容区域的包装器 -->
+    <div class="main-content-wrapper">
+        <header class="mb-10 text-center">
+            <h1 class="text-6xl font-extrabold text-purple-900 drop-shadow-lg">
+                希腊语字母教学
+            </h1>
+            <p class="text-2xl text-purple-700 mt-3">学习圣经希腊语的基础</p>
+        </header>
+
+        <div class="w-full max-w-3xl bg-white p-10 rounded-xl shadow-2xl flex flex-col items-center border-b-4 border-purple-300">
+            <!-- 字母卡片示例 -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 w-full">
+                <!-- Alpha -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 transform transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="0">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Α α</p>
+                    <p class="text-xl text-gray-700 mt-2">Alpha (阿尔法)</p>
+                </div>
+                <!-- Beta -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="1">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Β β</p>
+                    <p class="text-xl text-gray-700 mt-2">Beta (贝塔)</p>
+                </div>
+                <!-- Gamma -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="2">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Γ γ</p>
+                    <p class="text-xl text-gray-700 mt-2">Gamma (伽马)</p>
+                </div>
+                <!-- Delta -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="3">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Δ δ</p>
+                    <p class="text-xl text-gray-700 mt-2">Delta (德尔塔)</p>
+                </div>
+                <!-- Epsilon -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="4">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ε ε</p>
+                    <p class="text-xl text-gray-700 mt-2">Epsilon (伊普西隆)</p>
+                </div>
+                <!-- Zeta -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="5">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ζ ζ</p>
+                    <p class="text-xl text-gray-700 mt-2">Zeta (泽塔)</p>
+                </div>
+                <!-- Eta -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="6">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Η η</p>
+                    <p class="text-xl text-gray-700 mt-2">Eta (伊塔)</p>
+                </div>
+                <!-- Theta -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="7">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Θ θ</p>
+                    <p class="text-xl text-gray-700 mt-2">Theta (西塔)</p>
+                </div>
+                <!-- Iota -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="8">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ι ι</p>
+                    <p class="text-xl text-gray-700 mt-2">Iota (约塔)</p>
+                </div>
+                <!-- Kappa -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="9">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Κ κ</p>
+                    <p class="text-xl text-gray-700 mt-2">Kappa (卡帕)</p>
+                </div>
+                <!-- Lambda -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="10">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Λ λ</p>
+                    <p class="text-xl text-gray-700 mt-2">Lambda (拉姆达)</p>
+                </div>
+                <!-- Mu -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="11">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Μ μ</p>
+                    <p class="text-xl text-gray-700 mt-2">Mu (缪)</p>
+                </div>
+                <!-- Nu -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="12">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ν ν</p>
+                    <p class="text-xl text-gray-700 mt-2">Nu (纽)</p>
+                </div>
+                <!-- Xi -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="13">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ξ ξ</p>
+                    <p class="text-xl text-gray-700 mt-2">Xi (克西)</p>
+                </div>
+                <!-- Omicron -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="14">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ο ο</p>
+                    <p class="text-xl text-gray-700 mt-2">Omicron (奥密克戎)</p>
+                </div>
+                <!-- Pi -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="15">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Π π</p>
+                    <p class="text-xl text-gray-700 mt-2">Pi (派)</p>
+                </div>
+                <!-- Rho -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="16">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ρ ρ</p>
+                    <p class="text-xl text-gray-700 mt-2">Rho (柔)</p>
+                </div>
+                <!-- Sigma -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="17">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Σ σ ς</p>
+                    <p class="text-xl text-gray-700 mt-2">Sigma (西格马)</p>
+                </div>
+                <!-- Tau -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="18">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Τ τ</p>
+                    <p class="text-xl text-gray-700 mt-2">Tau (套)</p>
+                </div>
+                <!-- Upsilon -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="19">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Υ υ</p>
+                    <p class="text-xl text-gray-700 mt-2">Upsilon (宇普西隆)</p>
+                </div>
+                <!-- Phi -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="20">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Φ φ</p>
+                    <p class="text-xl text-gray-700 mt-2">Phi (弗爱)</p>
+                </div>
+                <!-- Chi -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="21">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Χ χ</p>
+                    <p class="text-xl text-gray-700 mt-2">Chi (希)</p>
+                </div>
+                <!-- Psi -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="22">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ψ ψ</p>
+                    <p class="text-xl text-gray-700 mt-2">Psi (普西)</p>
+                </div>
+                <!-- Omega -->
+                <div class="letter-card bg-purple-50 p-4 rounded-lg shadow-md text-center border border-purple-200 hover:scale-105 hover:shadow-lg cursor-pointer" data-letter-index="23">
+                    <p class="text-5xl font-bold text-purple-800 font-greek">Ω ω</p>
+                    <p class="text-xl text-gray-700 mt-2">Omega (欧米伽)</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-16 text-gray-700 text-base">
+            <p>© 2025 圣经希腊语学习应用. 保留所有权利.</p>
+        </footer>
+    </div>
+
+    <!-- 字母详情模态框 -->
+    <div id="letter-modal" class="fixed inset-0 hidden flex items-center justify-center z-50 modal-overlay">
+        <div class="bg-white p-8 rounded-lg shadow-2xl text-center max-w-md w-full mx-auto relative transform transition-all duration-300 ease-in-out scale-95 opacity-0">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold">&times;</button>
+            <h3 id="modal-greek-letter" class="text-8xl font-bold text-blue-800 font-greek mb-4"></h3>
+            <p id="modal-letter-name" class="text-3xl text-gray-700 mb-2 font-semibold"></p>
+            <p id="modal-pronunciation" class="text-2xl text-gray-600 mb-2 italic"></p>
+            <p id="modal-transliteration" class="text-2xl text-gray-600 mb-6"></p>
+
+            <!-- 来源与典故 -->
+            <p class="text-xl text-gray-700 font-semibold mt-4">来源与典故:</p>
+            <p id="modal-origin" class="text-lg text-gray-800 mb-4 leading-relaxed"></p>
+
+            <!-- 记忆方法 -->
+            <p class="text-xl text-gray-700 font-semibold mt-4">记忆方法:</p>
+            <p id="modal-memory" class="text-lg text-gray-800 mb-6 leading-relaxed"></p>
+
+            <div class="flex justify-between w-full max-w-xs mx-auto mt-6 space-x-4">
+                <button id="modal-prev-letter-button" class="modal-nav-button">
+                    上一个
+                </button>
+                <button id="modal-play-button"
+                    class="p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition duration-200 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-400 flex items-center justify-center"
+                    aria-label="朗读字母">
+                    <!-- 播放图标 (使用SVG) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.152a1 1 0 010 1.696l-4.606 3.455A1 1 0 018 15.152V8.848a1 1 0 011.146-.152l4.606 3.455z" />
+                    </svg>
+                </button>
+                <button id="modal-next-letter-button" class="modal-nav-button">
+                    下一个
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sidebarContainer = document.getElementById('sidebar-container');
+        const letterCards = document.querySelectorAll('.letter-card');
+        const letterModal = document.getElementById('letter-modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const modalGreekLetter = document.getElementById('modal-greek-letter');
+        const modalLetterName = document.getElementById('modal-letter-name');
+        const modalPronunciation = document.getElementById('modal-pronunciation');
+        const modalTransliteration = document.getElementById('modal-transliteration');
+        const modalOrigin = document.getElementById('modal-origin');
+        const modalMemory = document.getElementById('modal-memory');
+        const modalPlayButton = document.getElementById('modal-play-button');
+        const modalPrevLetterButton = document.getElementById('modal-prev-letter-button'); // 新增
+        const modalNextLetterButton = document.getElementById('modal-next-letter-button'); // 新增
+
+        let currentAudio = null;
+        let currentLetterIndex = 0; // 用于跟踪当前在模态框中显示的字母索引
+
+        // 字母数据数组，包含所有信息
+        const lettersData = [
+            {
+                greek: "Α α",
+                name: "Alpha",
+                pronunciation: "发音: /a/ (如英语'hat'中的'a')",
+                transliteration: "转写: a",
+                audio: "./audio/alphabet/alpha.mp3",
+                origin: "源自腓尼基字母aleph，意为‘牛’或‘首领’。在希腊语中，它是第一个字母，象征开始。",
+                memory: "想象一头牛的头，或者将其视为'A'的变体，代表'开始'。"
+            },
+            {
+                greek: "Β β",
+                name: "Beta",
+                pronunciation: "发音: /b/ (如英语'b')",
+                transliteration: "转写: b",
+                audio: "./audio/alphabet/beta.mp3",
+                origin: "源自腓尼基字母beth，意为‘房屋’。是希腊语的第二个字母。",
+                memory: "Beta像一个有两间房子的'B'字，或者想象一个房屋的侧面。"
+            },
+            {
+                greek: "Γ γ",
+                name: "Gamma",
+                pronunciation: "发音: /g/ (如英语'get'中的'g')",
+                transliteration: "转写: g",
+                audio: "./audio/alphabet/gamma.mp3",
+                origin: "源自腓尼基字母gimel，意为‘骆驼’。形状像一个倒置的镰刀或钩子。",
+                memory: "Gamma像一个倒置的'L'，想象骆驼的驼峰。"
+            },
+            {
+                greek: "Δ δ",
+                name: "Delta",
+                pronunciation: "发音: /d/ (如英语'd')",
+                transliteration: "转写: d",
+                audio: "./audio/alphabet/delta.mp3",
+                origin: "源自腓尼基字母daleth，意为‘门’。大写字母形状像一个三角形，像尼罗河三角洲。",
+                memory: "Delta像一个三角形，可以联想到门或三角洲。"
+            },
+            {
+                greek: "Ε ε",
+                name: "Epsilon",
+                pronunciation: "发音: /e/ (如英语'met'中的'e')",
+                transliteration: "转写: e",
+                audio: "./audio/alphabet/epsilon.mp3",
+                origin: "源自腓尼基字母he，是希腊语中第一个元音字母。Epsilon意为‘简单的e’。",
+                memory: "Epsilon像一个反向的'3'，或者像英语'E'的简化版。"
+            },
+            {
+                greek: "Ζ ζ",
+                name: "Zeta",
+                pronunciation: "发音: /z/ (如英语'z')",
+                transliteration: "转写: z",
+                audio: "./audio/alphabet/zeta.mp3",
+                origin: "源自腓尼基字母zayin，意为‘武器’或‘锄头’。",
+                memory: "Zeta像一个'Z'字，可以联想到闪电或锯齿。"
+            },
+            {
+                greek: "Η η",
+                name: "Eta",
+                pronunciation: "发音: /i/ (如英语'obey'中的'e')",
+                transliteration: "转写: ē",
+                audio: "./audio/alphabet/eta.mp3",
+                origin: "源自腓尼基字母heth，最初表示辅音，但在希腊语中演变为长元音。Eta意为‘长e’。",
+                memory: "Eta像一个'H'字，想象它比Epsilon更长。"
+            },
+            {
+                greek: "Θ θ",
+                name: "Theta",
+                pronunciation: "发音: /th/ (如英语'thin'中的'th')",
+                transliteration: "转写: th",
+                audio: "./audio/alphabet/theta.mp3",
+                origin: "源自腓尼基字母teth，意为‘轮子’。形状像一个中间有横线的圆圈。",
+                memory: "Theta像一个带眼睛的圆圈，或者一个轮子。"
+            },
+            {
+                greek: "Ι ι",
+                name: "Iota",
+                pronunciation: "发音: /i/ (如英语'hit'中的'i')",
+                transliteration: "转写: i",
+                audio: "./audio/alphabet/iota.mp3",
+                origin: "源自腓尼基字母yodh，意为‘手’。是希腊语中最小的字母之一。",
+                memory: "Iota像一根细长的棍子，或者一个点，非常小。"
+            },
+            {
+                greek: "Κ κ",
+                name: "Kappa",
+                pronunciation: "发音: /k/ (如英语'k')",
+                transliteration: "转写: k",
+                audio: "./audio/alphabet/kappa.mp3",
+                origin: "源自腓尼基字母kaph，意为‘手掌’。",
+                memory: "Kappa像一个'K'字，可以联想到手掌张开的形状。"
+            },
+            {
+                greek: "Λ λ",
+                name: "Lambda",
+                pronunciation: "发音: /l/ (如英语'l')",
+                transliteration: "转写: l",
+                audio: "./audio/alphabet/lambda.mp3",
+                origin: "源自腓尼基字母lamedh，意为‘牛刺’或‘教导’。",
+                memory: "Lambda像一个倒置的'V'，可以联想到山峰或屋顶。"
+            },
+            {
+                greek: "Μ μ",
+                name: "Mu",
+                pronunciation: "发音: /m/ (如英语'm')",
+                transliteration: "转写: m",
+                audio: "./audio/alphabet/mu.mp3",
+                origin: "源自腓尼基字母mem，意为‘水’。",
+                memory: "Mu像一个'M'字，联想到水波纹。"
+            },
+            {
+                greek: "Ν ν",
+                name: "Nu",
+                pronunciation: "发音: /n/ (如英语'n')",
+                transliteration: "转写: n",
+                audio: "./audio/alphabet/nu.mp3",
+                origin: "源自腓尼基字母nun，意为‘鱼’。",
+                memory: "Nu像一个'N'字，联想到鱼在水中游动。"
+            },
+            {
+                greek: "Ξ ξ",
+                name: "Xi",
+                pronunciation: "发音: /ks/ (如英语'x')",
+                transliteration: "转写: x",
+                audio: "./audio/alphabet/xi.mp3",
+                origin: "希腊语特有的字母，表示/ks/音。形状像三条横线。",
+                memory: "Xi像三条平行线，可以联想到'X'的形状。"
+            },
+            {
+                greek: "Ο ο",
+                name: "Omicron",
+                pronunciation: "发音: /o/ (如英语'not'中的'o')",
+                transliteration: "转写: o",
+                audio: "./audio/alphabet/omicron.mp3",
+                origin: "源自腓尼基字母ayin，意为‘眼睛’。Omicron意为‘小o’。",
+                memory: "Omicron就是一个小圆圈，像一个眼睛。"
+            },
+            {
+                greek: "Π π",
+                name: "Pi",
+                pronunciation: "发音: /p/ (如英语'p')",
+                transliteration: "转写: p",
+                audio: "./audio/alphabet/pi.mp3",
+                origin: "源自腓尼基字母pe，意为‘嘴’。",
+                memory: "Pi像一个门框，或者数学中的圆周率符号。"
+            },
+            {
+                greek: "Ρ ρ",
+                name: "Rho",
+                pronunciation: "发音: /r/ (如英语'r')",
+                transliteration: "转写: r (rh)",
+                audio: "./audio/alphabet/rho.mp3",
+                origin: "源自腓尼基字母resh，意为‘头’。",
+                memory: "Rho像一个'P'字，但尾巴向下，联想到一个人的头和身体。"
+            },
+            {
+                greek: "Σ σ ς",
+                name: "Sigma",
+                pronunciation: "发音: /s/ (如英语's')",
+                transliteration: "转写: s",
+                audio: "./audio/alphabet/sigma.mp3",
+                origin: "源自腓尼基字母shin，意为‘牙齿’。有三种形式。",
+                memory: "Sigma像一个'S'字，可以联想到蛇或闪电。"
+            },
+            {
+                greek: "Τ τ",
+                name: "Tau",
+                pronunciation: "发音: /t/ (如英语't')",
+                transliteration: "转写: t",
+                audio: "./audio/alphabet/tau.mp3",
+                origin: "源自腓尼基字母taw，意为‘标记’或‘十字架’。",
+                memory: "Tau像一个'T'字，联想到十字架。"
+            },
+            {
+                greek: "Υ υ",
+                name: "Upsilon",
+                pronunciation: "发音: /u/ (如英语'put'中的'u')",
+                transliteration: "转写: y",
+                audio: "./audio/alphabet/upsilon.mp3",
+                origin: "源自腓尼基字母waw，但在希腊语中演变为元音。形状像一个Y。",
+                memory: "Upsilon像一个'Y'字，或者一个分叉的路。"
+            },
+            {
+                greek: "Φ φ",
+                name: "Phi",
+                pronunciation: "发音: /f/ (如英语'f')",
+                transliteration: "转写: ph",
+                audio: "./audio/alphabet/phi.mp3",
+                origin: "希腊语特有的字母，表示/ph/音。形状像一个圆圈中间穿过一条竖线。",
+                memory: "Phi像一个中间有杆子的圆圈，可以联想到一个靶子。"
+            },
+            {
+                greek: "Χ χ",
+                name: "Chi",
+                pronunciation: "发音: /x/ (如苏格兰语'loch'中的'ch')",
+                transliteration: "转写: ch",
+                audio: "./audio/alphabet/chi.mp3",
+                origin: "希腊语特有的字母，表示/ch/音。形状像一个X。",
+                memory: "Chi像一个'X'字，可以联想到交叉的骨头。"
+            },
+            {
+                greek: "Ψ ψ",
+                name: "Psi",
+                pronunciation: "发音: /ps/ (如英语'lips'中的'ps')",
+                transliteration: "转写: ps",
+                audio: "./audio/alphabet/psi.mp3",
+                origin: "希腊语特有的字母，表示/ps/音。形状像一个三叉戟。",
+                memory: "Psi像一个三叉戟，或者一个倒置的音叉。"
+            },
+            {
+                greek: "Ω ω",
+                name: "Omega",
+                pronunciation: "发音: /o/ (如英语'tone'中的'o')",
+                transliteration: "转写: ō",
+                audio: "./audio/alphabet/omega.mp3",
+                origin: "源自腓尼基字母ayin，是希腊语中最后一个字母。Omega意为‘大o’，象征结束。",
+                memory: "Omega像一个倒置的Ω，或者一个开口的碗，代表'结束'。"
+            }
+        ];
+
+
+        // 自定义模态框显示函数 (代替 alert)
+        function showCustomAlert(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50';
+            alertDiv.innerHTML = `
+                <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm mx-auto">
+                    <p class="text-2xl font-semibold text-gray-800 mb-6">${message}</p>
+                    <button id="custom-alert-ok" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                        确定
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(alertDiv);
+
+            document.getElementById('custom-alert-ok').onclick = () => {
+                document.body.removeChild(alertDiv);
+            };
+        }
+
+        // 播放字母发音
+        function playLetterAudio(audioUrl) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            if (audioUrl) {
+                currentAudio = new Audio(audioUrl);
+                currentAudio.play().catch(e => {
+                    console.error("播放音频失败:", e);
+                    showCustomAlert("播放音频失败，请检查音频文件路径或浏览器权限。");
+                });
+            } else {
+                showCustomAlert("该字母没有提供音频文件。");
+            }
+        }
+
+        // 渲染模态框内容并显示
+        function renderModalLetter() {
+            const letter = lettersData[currentLetterIndex];
+            if (!letter) {
+                hideLetterModal();
+                return;
+            }
+
+            modalGreekLetter.textContent = letter.greek;
+            modalLetterName.textContent = letter.name + " (" + letter.greek.split(' ')[0] + ")";
+            modalPronunciation.textContent = letter.pronunciation;
+            modalTransliteration.textContent = letter.transliteration;
+            modalOrigin.textContent = letter.origin;
+            modalMemory.textContent = letter.memory;
+            modalPlayButton.dataset.audioUrl = letter.audio;
+
+            // 更新导航按钮状态
+            modalPrevLetterButton.disabled = currentLetterIndex === 0;
+            modalNextLetterButton.disabled = currentLetterIndex === lettersData.length - 1;
+
+            // 显示模态框（如果尚未显示）
+            if (letterModal.classList.contains('hidden')) {
+                letterModal.classList.remove('hidden');
+                setTimeout(() => {
+                    letterModal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+                    letterModal.querySelector('div').classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+        }
+
+        // 隐藏字母详情模态框
+        function hideLetterModal() {
+            letterModal.querySelector('div').classList.remove('scale-100', 'opacity-100');
+            letterModal.querySelector('div').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                letterModal.classList.add('hidden');
+                if (currentAudio) {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                }
+            }, 300);
+        }
+
+        // 侧边栏加载函数 (关键修改：确保调用 activateSidebarLinks)
+        async function loadSidebar() {
+            const sidebarContainer = document.getElementById('sidebar-container');
+            try {
+                const response = await fetch('navigation_sidebar.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text();
+                sidebarContainer.innerHTML = text;
+                // 确保在侧边栏内容加载完成后调用 activateSidebarLinks
+                if (typeof window.activateSidebarLinks === 'function') {
+                    window.activateSidebarLinks();
+                } else {
+                    console.warn("activateSidebarLinks 函数未定义或不可访问。");
+                }
+            } catch (e) {
+                console.error("加载侧边栏失败:", e);
+                sidebarContainer.innerHTML = '<div class="p-4 text-red-500">加载导航失败。</div>';
+            }
+        }
+
+        // 事件监听器
+        letterCards.forEach(card => {
+            card.addEventListener('click', () => {
+                currentLetterIndex = parseInt(card.dataset.letterIndex); // 获取点击卡片的索引
+                renderModalLetter(); // 渲染并显示模态框
+            });
+        });
+
+        closeModalButton.addEventListener('click', hideLetterModal);
+
+        modalPlayButton.addEventListener('click', () => {
+            const audioUrl = modalPlayButton.dataset.audioUrl;
+            playLetterAudio(audioUrl);
+        });
+
+        modalPrevLetterButton.addEventListener('click', () => {
+            if (currentLetterIndex > 0) {
+                currentLetterIndex--;
+                renderModalLetter();
+            }
+        });
+
+        modalNextLetterButton.addEventListener('click', () => {
+            if (currentLetterIndex < lettersData.length - 1) {
+                currentLetterIndex++;
+                renderModalLetter();
+            }
+        });
+
+        // 点击模态框背景关闭
+        letterModal.addEventListener('click', (event) => {
+            if (event.target === letterModal) {
+                hideLetterModal();
+            }
+        });
+
+        // 初始渲染
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebar();
+        });
+    </script>
+    <script src="./js/sidebar_logic.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "bookTitle": "马太福音词汇",
+  "sections": {
+    "1_1": {
+      "title": "马太福音 1:1",
+      "subtitle": "学习并记忆《马太福音》第一章第一节的核心词汇",
+      "words": [
+        { "greek": "βίβλος", "pronunciation": "bíblos", "chinese": "书，卷轴", "example": "βίβλος γενέσεως Ἰησοῦ Χριστοῦ", "audioUrl": "./audio/matthew_1/biblos.mp3" },
+        { "greek": "γένεσις", "pronunciation": "génesis", "chinese": "家谱，起源，诞生", "example": "βίβλος γενέσεως Ἰησοῦ Χριστοῦ", "audioUrl": "./audio/matthew_1/geneseos.mp3" },
+        { "greek": "Ἰησοῦ", "pronunciation": "Iēsou", "chinese": "耶稣 (属格)", "example": "βίβλος γενέσεως Ἰησοῦ Χριστοῦ", "audioUrl": "./audio/matthew_1/iesou.mp3" },
+        { "greek": "Χριστοῦ", "pronunciation": "Christou", "chinese": "基督 (属格)", "example": "βίβλος γενέσεως Ἰησοῦ Χριστοῦ", "audioUrl": "./audio/matthew_1/christou.mp3" },
+        { "greek": "υἱοῦ", "pronunciation": "huiou", "chinese": "儿子 (属格)", "example": "υἱοῦ Δαυὶδ υἱοῦ Ἀβραάμ", "audioUrl": "./audio/matthew_1/huiou.mp3" },
+        { "greek": "Δαυὶδ", "pronunciation": "Dauid", "chinese": "大卫", "example": "υἱοῦ Δαυὶδ", "audioUrl": "./audio/matthew_1/dauid.mp3" },
+        { "greek": "Ἀβραάμ", "pronunciation": "Abraam", "chinese": "亚伯拉罕", "example": "Ἀβραὰμ ἐγέννησεν τὸν Ἰσαάκ", "audioUrl": "./audio/matthew_1/abraam.mp3" }
+      ]
+    },
+    "1_2_part1": {
+      "title": "马太福音 1:2 (一)",
+      "subtitle": "学习并记忆《马太福音》第一章第二节（第一部分）的核心词汇",
+      "words": [
+        { "greek": "ἐγέννησεν", "pronunciation": "egennēsen", "chinese": "生了 (动词)", "example": "Ἀβραὰμ ἐγέννησεν τὸν Ἰσαάκ", "audioUrl": "./audio/matthew_1/egenneesen.mp3" },
+        { "greek": "Ἰσαάκ", "pronunciation": "Isaak", "chinese": "以撒", "example": "Ἀβραὰμ ἐγέννησεν τὸν Ἰσαάκ", "audioUrl": "./audio/matthew_1/isaak.mp3" },
+        { "greek": "Ἰακὼβ", "pronunciation": "Iakōb", "chinese": "雅各", "example": "Ἰσαὰκ δὲ ἐγέννησεν τὸν Ἰακὼβ", "audioUrl": "./audio/matthew_1/iakob.mp3" },
+        { "greek": "Ἰούδαν", "pronunciation": "Ioudan", "chinese": "犹大", "example": "Ἰακὼβ δὲ ἐγέννησεν τὸν Ἰούδαν", "audioUrl": "./audio/matthew_1/ioudan.mp3" }
+      ]
+    },
+    "1_2_part2": {
+      "title": "马太福音 1:2 (二)",
+      "subtitle": "学习并记忆《马太福音》第一章第二节（第二部分）的核心词汇",
+      "words": [
+        { "greek": "Φάρες", "pronunciation": "Phares", "chinese": "法勒斯", "example": "Ἰούδας δὲ ἐγέννησεν τὸν Φάρες", "audioUrl": "./audio/matthew_1/phares.mp3" },
+        { "greek": "Ζάρα", "pronunciation": "Zara", "chinese": "谢拉", "example": "καὶ τὸν Ζάρα ἐκ τῆς Θάμαρ", "audioUrl": "./audio/matthew_1/zara.mp3" },
+        { "greek": "Θάμαρ", "pronunciation": "Thamar", "chinese": "他玛", "example": "ἐκ τῆς Θάμαρ", "audioUrl": "./audio/matthew_1/thamar.mp3" },
+        { "greek": "Ἑσρὼμ", "pronunciation": "Hesrōm", "chinese": "希斯仑", "example": "Φάρες δὲ ἐγέννησεν τὸν Ἑσρὼμ", "audioUrl": "./audio/matthew_1/hesrom.mp3" },
+        { "greek": "Ἀράμ", "pronunciation": "Aram", "chinese": "亚兰", "example": "Ἑσρὼμ δὲ ἐγέννησεν τὸν Ἀράμ", "audioUrl": "./audio/matthew_1/aram.mp3" }
+      ]
+    }
+  },
+  "sectionOrder": ["1_1", "1_2_part1", "1_2_part2"]
+}
