@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圣经经文阅读器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 保留原有样式不变 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        :root {
+            --primary-color: #8e44ad;
+            --secondary-color: #3498db;
+            --light-bg: #f9f9f9;
+            --dark-bg: #2c3e50;
+            --text-dark: #333;
+            --text-light: #fff;
+            --sidebar-width: 260px;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --success: #27ae60;
+            --warning: #f39c12;
+            --error: #e74c3c;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(to bottom, var(--dark-bg), #1a2530);
+            color: var(--text-light);
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+        
+        .logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo i {
+            font-size: 28px;
+            color: var(--primary-color);
+        }
+        
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .logo span {
+            color: var(--secondary-color);
+        }
+        
+        .chapter-list {
+            padding: 0 15px;
+        }
+        
+        .chapter-list h3 {
+            padding: 10px 15px;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #aaa;
+        }
+        
+        .chapter-item {
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chapter-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .chapter-item.active {
+            background: linear-gradient(to right, var(--primary-color), #6c1b9e);
+            box-shadow: 0 4px 10px rgba(142, 68, 173, 0.4);
+        }
+        
+        .chapter-item i {
+            font-size: 18px;
+            color: #7f8c8d;
+        }
+        
+        .chapter-item.active i {
+            color: var(--text-light);
+        }
+        
+        .chapter-item .name {
+            font-size: 16px;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .chapter-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-bg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chapter-title i {
+            color: var(--primary-color);
+        }
+        
+        .audio-player {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .audio-player i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+        
+        .player-controls {
+            flex-grow: 1;
+        }
+        
+        .player-controls button {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .player-controls button:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+        
+        .verses-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .verse-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .verse-card.playing {
+            box-shadow: 0 0 0 2px var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .verse-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .verse-header {
+            background: linear-gradient(to right, var(--primary-color), #6c1b9e);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .verse-header i {
+            font-size: 20px;
+        }
+        
+        .verse-number {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .verse-content {
+            padding: 20px;
+        }
+        
+        .verse-row {
+            margin-bottom: 15px;
+        }
+        
+        .verse-row h4 {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+        
+        .verse-row p {
+            font-size: 17px;
+            line-height: 1.6;
+        }
+        
+        .greek-text {
+            font-family: 'Times New Roman', serif;
+            font-size: 18px;
+            font-style: italic;
+            color: var(--dark-bg);
+        }
+        
+        .chinese-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        
+        .explanation {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 25px;
+        }
+        
+        .words-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .words-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .word-card {
+            background-color: white;
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        
+        .word-text {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .word-analysis {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+        
+        .word-meaning {
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* 书卷部分样式 */
+        .book-section {
+            padding: 0 15px;
+            margin-bottom: 15px;
+        }
+
+        .book-header {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .book-header:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .book-header h3 {
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #aaa;
+            margin: 0;
+        }
+
+        .book-header i {
+            transition: transform 0.3s ease;
+        }
+
+        .book-chapters {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .book-section.collapsed .book-chapters {
+            max-height: 0;
+        }
+
+        .book-section.collapsed .book-header i {
+            transform: rotate(-90deg);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .logo h1, .chapter-item .name, .chapter-list h3 {
+                display: none;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .chapter-item {
+                justify-content: center;
+                padding: 15px 10px;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .chapter-title {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .logo h1 {
+                display: block;
+                font-size: 18px;
+            }
+            
+            .chapter-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 10px;
+            }
+            
+            .chapter-list h3 {
+                display: none;
+            }
+            
+            .chapter-item {
+                padding: 10px 15px;
+                margin-bottom: 0;
+                border-radius: 30px;
+                font-size: 14px;
+            }
+            
+            .chapter-item .name {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            /* 其他样式保持不变... */
+            .book-header h3 {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            /* 其他样式保持不变... */
+            .book-section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 10px;
+            }
+            
+            .book-header {
+                padding: 10px 15px;
+                margin-bottom: 0;
+                border-radius: 30px;
+                font-size: 14px;
+                width: 100%;
+            }
+            
+            .book-header h3 {
+                display: block;
+            }
+            
+            .chapter-item {
+                padding: 10px 15px;
+                margin-bottom: 0;
+                border-radius: 30px;
+                font-size: 14px;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边导航栏 -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-book-bible"></i>
+            <h1>新约希腊文圣经<span>阅读器</span></h1>
+        </div>
+        
+        <div class="chapter-list">
+            <!-- 马可福音（可折叠部分） -->
+            <div class="book-section">
+                <div class="book-header">
+                    <h3>马可福音</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="book-chapters">
+                    <div class="chapter-item" data-chapter="mark_1">
+                        
+                        <span class="name">马可福音 1章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_2">
+                       
+                        <span class="name">马可福音 2章</span>
+                    </div>
+                    <!-- 添加3-16章 -->
+                    <div class="chapter-item" data-chapter="mark_3">
+                        
+                        <span class="name">马可福音 3章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_4">
+                        <!-- 约翰一书（可折叠部分） -->
+                        <span class="name">马可福音 4章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_5">
+                       
+                        <span class="name">马可福音 5章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_6">
+                        
+                        <span class="name">马可福音 6章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_7">
+                        
+                        <span class="name">马可福音 7章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_8">
+                       
+                        <span class="name">马可福音 8章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_9">
+                      
+                        <span class="name">马可福音 9章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_10">
+                       
+                        <span class="name">马可福音 10章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_11">
+                        
+                        <span class="name">马可福音 11章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_12">
+                       
+                        <span class="name">马可福音 12章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_13">
+                       
+                        <span class="name">马可福音 13章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_14">
+                       
+                        <span class="name">马可福音 14章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_15">
+                        
+                        <span class="name">马可福音 15章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="mark_16">
+                        
+                        <span class="name">马可福音 16章</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 约翰福音（可折叠部分） -->
+            <div class="book-section">
+                <div class="book-header">
+                    <h3>约翰福音</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="book-chapters">
+                    <div class="chapter-item" data-chapter="john_1">
+                        
+                        <span class="name">约翰福音 1章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_2">
+                       
+                        <span class="name">约翰福音 2章</span>
+                    </div>
+
+                    <div class="chapter-item" data-chapter="john_3">
+                        
+                        <span class="name">约翰福音 3章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_4">
+              
+                        <span class="name">约翰福音 4章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_5">
+                       
+                        <span class="name">约翰福音 5章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_6">
+                        
+                        <span class="name">约翰福音 6章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_7">
+                        
+                        <span class="name">约翰福音 7章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_8">
+                       
+                        <span class="name">约翰福音 8章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_9">
+                      
+                        <span class="name">约翰福音 9章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_10">
+                       
+                        <span class="name">约翰福音 10章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_11">
+                        
+                        <span class="name">约翰福音 11章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_12">
+                       
+                        <span class="name">约翰福音 12章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_13">
+                       
+                        <span class="name">约翰福音 13章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_14">
+                       
+                        <span class="name">约翰福音 14章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_15">
+                        
+                        <span class="name">约翰福音 15章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="john_16">
+                        
+                        <span class="name">约翰福音 16章</span>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <!-- 约翰一书（可折叠部分） -->
+            <div class="book-section">
+                <div class="book-header">
+                    <h3>约翰一书</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="book-chapters">
+                    <div class="chapter-item active" data-chapter="1_john_1">
+                        <i class="fas fa-1"></i>
+                        <span class="name">约翰一书 1章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="1_john_2">
+                        <i class="fas fa-2"></i>
+                        <span class="name">约翰一书 2章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="1_john_3">
+                        <i class="fas fa-3"></i>
+                        <span class="name">约翰一书 3章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="1_john_4">
+                        <i class="fas fa-4"></i>
+                        <span class="name">约翰一书 4章</span>
+                    </div>
+                    <div class="chapter-item" data-chapter="1_john_5">
+                        <i class="fas fa-5"></i>
+                        <span class="name">约翰一书 5章</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 约翰二书（单章书卷） -->
+            <div class="book-section">
+                <div class="book-header">
+                    <h3>约翰二书</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="book-chapters">
+                    <div class="chapter-item" data-chapter="2_john_1">
+                        <i class="fas fa-book"></i>
+                        <span class="name">约翰二书</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 约翰三书（单章书卷） -->
+            <div class="book-section">
+                <div class="book-header">
+                    <h3>约翰三书</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="book-chapters">
+                    <div class="chapter-item" data-chapter="3_john_1">
+                        <i class="fas fa-book"></i>
+                        <span class="name">约翰三书</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="header">
+            <div class="chapter-title">
+                <i class="fas fa-scroll"></i>
+                <span id="current-chapter-title">约翰一书 1章</span>
+            </div>
+            <div class="audio-player" id="audio-player" style="display: none;">
+                <i class="fas fa-headphones"></i>
+                <div class="player-controls">
+                    <button id="play-button"><i class="fas fa-play"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="verses-container" id="verses-container">
+            <div class="verse-card">
+                <div class="verse-header">
+                    <i class="fas fa-verse"></i>
+                    <div class="verse-number">第 1 节</div>
+                </div>
+                <div class="verse-content">
+                    <div class="verse-row">
+                        <h4>希腊文</h4>
+                        <p class="greek-text">Ὃ ἦν ἀπ᾽ ἀρχῆς, ὃ ἀκηκόαμεν, ὃ ἑωράκαμεν τοῖς ὀφθαλμοῖς ἡμῶν, ὃ ἐθεασάμεθα καὶ αἱἱ χεῖρες ἡμῶν ἐψηλάφησαν, περὶ τοῦ λόγου τῆς ζωῆς</p>
+                    </div>
+                    <div class="verse-row">
+                        <h4>中文</h4>
+                        <p class="chinese-text">论到从起初原有的生命之道，就是我们听见过、亲眼看见过、亲手摸过的。</p>
+                    </div>
+                    <div class="verse-row">
+                        <h4>解释</h4>
+                        <div class="explanation">约翰以见证人的身份阐述耶稣基督道成肉身的事实，强调其真实性——不仅被听见、被看见，甚至被亲手触摸过。</div>
+                    </div>
+                    <div class="words-section">
+                        <h4>单词解析</h4>
+                        <div class="words-grid">
+                            <div class="word-card">
+                                <div class="word-text">ἀρχῆς</div>
+                                <div class="word-meaning">起初，开始</div>
+                                <div class="word-analysis">名词，属格单数，阴性</div>
+                                
+                            </div>
+                            <div class="word-card">
+                                <div class="word-text">ἀκηκόαμεν</div>
+                                <div class="word-meaning">我们已经听见</div>
+                                <div class="word-analysis">动词，完成时主动直陈，第一人称复数</div>
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="verse-card">
+                <div class="verse-header">
+                    <i class="fas fa-verse"></i>
+                    <div class="verse-number">第 2 节</div>
+                </div>
+                <div class="verse-content">
+                    <div class="verse-row">
+                        <h4>希腊文</h4>
+                        <p class="greek-text">καὶ ἡ ζωὴ ἐφανερώθη, καὶ ἑωράκαμεν καὶ μαρτυροῦμεν καὶ ἀπαγγέλλομεν ὑμῖν τὴν ζωὴν τὴν αἰἰώνιον ἥἥτις ἦἦν πρὸς τὸν πατέρα καὶ ἐφανερώθη ἡμῖν</p>
+                    </div>
+                    <div class="verse-row">
+                        <h4>中文</h4>
+                        <p class="chinese-text">这生命已经显现出来，我们也看见过，现在又作见证，并且将原与父同在且向我们显现过的永远生命传给你们。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 章节列表 - 增加马可福音
+        const chapters = [
+            { 
+                id: "mark_1", 
+                name: "马可福音 1章", 
+                audioUrl: "./audio/nt_mark/2Mark_1.MP3",
+                json: "./data/bible_chapters/mark_1.json" 
+            },
+            { 
+                id: "mark_2", 
+                name: "马可福音 2章", 
+                audioUrl: "./audio/nt_mark/2Mark_2.MP3",
+                json: "./data/bible_chapters/mark_2.json" 
+            },
+            { 
+                id: "mark_3", 
+                name: "马可福音 3章", 
+                audioUrl: "./audio/nt_mark/2Mark_3.MP3",
+                json: "./data/bible_chapters/mark_3.json" 
+            },
+            { 
+                id: "mark_4", 
+                name: "马可福音 4章", 
+                audioUrl: "./audio/nt_mark/2Mark_4.MP3",
+                json: "./data/bible_chapters/mark_4.json" 
+            },
+               { 
+                id: "mark_5", 
+                name: "马可福音 5章", 
+                audioUrl: "./audio/nt_mark/2Mark_5.MP3",
+                json: "./data/bible_chapters/mark_5.json" 
+            },
+            { 
+                id: "mark_6", 
+                name: "马可福音 6章", 
+                audioUrl: "./audio/nt_mark/2Mark_6.MP3",
+                json: "./data/bible_chapters/mark_6.json" 
+            },
+            { 
+                id: "mark_7", 
+                name: "马可福音 7章", 
+                audioUrl: "./audio/nt_mark/2Mark_7.MP3",
+                json: "./data/bible_chapters/mark_7.json" 
+            },
+            { 
+                id: "mark_8",
+                name: "马可福音 8章", 
+                audioUrl: "./audio/nt_mark/2Mark_8.MP3", 
+                json: "./data/bible_chapters/mark_8.json" 
+            },
+            { 
+                id: "mark_9", 
+                name: "马可福音 9章", 
+                audioUrl: "./audio/nt_mark/2Mark_9.MP3", 
+                json: "./data/bible_chapters/mark_9.json" 
+            },
+            { 
+                id: "mark_10", 
+                name: "马可福音 10章",
+                audioUrl: "./audio/nt_mark/2Mark_10.MP3", 
+                json: "./data/bible_chapters/mark_10.json" 
+            },
+            { 
+                id: "mark_11", 
+                name: "马可福音 11章", 
+                audioUrl: "./audio/nt_mark/2Mark_11.MP3", 
+                json: "./data/bible_chapters/mark_11.json" 
+            },
+            { 
+                id: "mark_12", 
+                name: "马可福音 12章", 
+                audioUrl: "./audio/nt_mark/2Mark_12.MP3", 
+                json: "./data/bible_chapters/mark_12.json" 
+            },
+            { 
+                id: "mark_13", 
+                name: "马可福音 13章", 
+                audioUrl: "./audio/nt_mark/2Mark_13.MP3", 
+                json: "./data/bible_chapters/mark_13.json" 
+            },
+            { 
+                id: "mark_14", 
+                name: "马可福音 14章", 
+                audioUrl: "./audio/nt_mark/2Mark_14.MP3", 
+                json: "./data/bible_chapters/mark_14.json" 
+            },
+            { 
+                id: "mark_15", 
+                name: "马可福音 15章", 
+                audioUrl: "./audio/nt_mark/2Mark_15.MP3", 
+                json: "./data/bible_chapters/mark_15.json" 
+            },
+            { 
+                id: "mark_16", 
+                name: "马可福音 16章", 
+                audioUrl: "./audio/nt_mark/2Mark_16.MP3", 
+                json: "./data/bible_chapters/mark_16.json" 
+            },
+
+            //约翰福音
+            
+            //约翰书信
+            { 
+                id: "1_john_1", 
+                name: "约翰一书 1章", 
+                audioUrl: "./audio/nt_john_1/23JohA_1.MP3",
+                json: "./data/bible_chapters/1_john_1.json"
+            },
+            { 
+                id: "1_john_2", 
+                name: "约翰一书 2章", 
+                audioUrl: "./audio/nt_john_1/23JohA_2.MP3",
+                json: "./data/bible_chapters/1_john_2.json" 
+            },
+            { 
+                id: "1_john_3", 
+                name: "约翰一书 3章", 
+                audioUrl: "./audio/nt_john_1/23JohA_3.MP3",
+                json: "./data/bible_chapters/1_john_3.json" 
+            },
+            { 
+                id: "1_john_4", 
+                name: "约翰一书 4章", 
+                audioUrl: "./audio/nt_john_1/23JohA_4.MP3",
+                json: "./data/bible_chapters/1_john_4.json" 
+            },
+            { 
+                id: "1_john_5", 
+                name: "约翰一书 5章", 
+                audioUrl: "./audio/nt_john_1/23JohA_5.MP3",
+                json: "./data/bible_chapters/1_john_5.json" 
+            },
+            { 
+                id: "2_john_1", 
+                name: "约翰二书", 
+                audioUrl: "./audio/nt_john_1/24JohB_1.MP3",
+                json: "./data/bible_chapters/2_john_1.json" 
+            },
+            { 
+                id: "3_john_1", 
+                name: "约翰三书", 
+                audioUrl: "./audio/nt_john_1/25JohC_1.MP3",
+                json: "./data/bible_chapters/3_john_1.json" 
+            }
+
+        ];
+        
+        // 当前状态变量
+        let currentChapterId = "1_john_1";
+        let audioElement = null;
+        
+        // DOM 元素
+        const versesContainer = document.getElementById('verses-container');
+        const currentChapterTitle = document.getElementById('current-chapter-title');
+        const audioPlayer = document.getElementById('audio-player');
+        const playButton = document.getElementById('play-button');
+        
+        // 加载并显示章节内容
+        async function loadChapter(chapterId) {
+            // 更新活动状态
+            document.querySelectorAll('.chapter-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.chapter-item[data-chapter="${chapterId}"]`).classList.add('active');
+            
+            const chapter = chapters.find(c => c.id === chapterId);
+            if (!chapter) {
+                console.error('找不到章节信息');
+                return;
+            }
+            
+            // 更新标题
+            currentChapterId = chapterId;
+            currentChapterTitle.textContent = chapter.name;
+            
+            try {
+                // 获取JSON数据
+                const response = await fetch(chapter.json);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP错误! 状态: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // 渲染内容
+                versesContainer.innerHTML = data.verses.map(verse => 
+                    formatVerseCard(verse)
+                ).join('');
+                
+                // 更新音频播放器
+                if (data.audioUrl) {
+                    // 移除之前的音频元素
+                    if (audioElement) {
+                        audioElement.pause();
+                        audioElement.remove();
+                        audioElement = null;
+                    }
+                    
+                    // 创建新的音频元素
+                    audioElement = new Audio(data.audioUrl);
+                    audioPlayer.style.display = 'flex';
+                    
+                    // 设置播放按钮事件
+                    playButton.onclick = function() {
+                        if (audioElement.paused) {
+                            audioElement.play();
+                            playButton.innerHTML = '<i class="fas fa-pause"></i>';
+                        } else {
+                            audioElement.pause();
+                            playButton.innerHTML = '<i class="fas fa-play"></i>';
+                        }
+                    };
+                    
+                    // 音频播放结束时重置按钮
+                    audioElement.addEventListener('ended', function() {
+                        playButton.innerHTML = '<i class="fas fa-play"></i>';
+                    });
+                    
+                    // 为经文卡片添加点击事件
+                    document.querySelectorAll('.verse-card').forEach(card => {
+                        card.addEventListener('click', function() {
+                            const startTime = parseFloat(this.dataset.startTime);
+                            
+                            // 移除之前的高亮
+                            document.querySelectorAll('.verse-card.playing').forEach(el => {
+                                el.classList.remove('playing');
+                            });
+                            
+                            // 添加当前高亮
+                            this.classList.add('playing');
+                            
+                            // 播放该节经文
+                            audioElement.currentTime = startTime;
+                            audioElement.play();
+                            playButton.innerHTML = '<i class="fas fa-pause"></i>';
+                            
+                            // 滚动到当前播放的经文
+                            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        });
+                    });
+                } else {
+                    audioPlayer.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('加载JSON时出错:', error);
+            }
+        }
+        
+        // 格式化JSON中的经文内容
+        function formatVerseCard(verse) {
+            // 创建词汇分析部分
+            const wordsSection = verse.words && verse.words.length > 0 ? `
+                <div class="words-section">
+                    <h4>单词解析</h4>
+                    <div class="words-grid">
+                        ${verse.words.map(word => `
+                            <div class="word-card">
+                                <div class="word-text">${word.text || ''}</div>
+                                <div class="word-meaning">${word.meaning || ''}</div>
+                                <div class="word-analysis">${word.analysis || ''}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : '';
+            
+            return `
+                <div class="verse-card" data-start-time="${verse.startTime}">
+                    <div class="verse-header">
+                        <i class="fas fa-verse"></i>
+                        <div class="verse-number">第 ${verse.verseNumber} 节</div>
+                    </div>
+                    <div class="verse-content">
+                        <div class="verse-row">
+                            <h4>希腊文</h4>
+                            <p class="greek-text">${verse.greek || '无内容'}</p>
+                        </div>
+                        <div class="verse-row">
+                            <h4>中文</h4>
+                            <p class="chinese-text">${verse.chinese || '无内容'}</p>
+                        </div>
+                        <div class="verse-row">
+                            <h4>解释</h4>
+                            <div class="explanation">${verse.explanation || '暂无解释'}</div>
+                        </div>
+                        ${wordsSection}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置章节点击事件
+            document.querySelectorAll('.chapter-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const chapterId = this.getAttribute('data-chapter');
+                    loadChapter(chapterId);
+                });
+            });
+            
+            // 加载默认章节
+            loadChapter(currentChapterId);
+        });
+                // 书卷折叠功能
+        document.querySelectorAll('.book-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const bookSection = this.parentElement;
+                bookSection.classList.toggle('collapsed');
+            });
+        });
+    </script>
+</body>
+</html>
